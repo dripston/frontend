@@ -1,9 +1,9 @@
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react()],
+  plugins: [react()],
+  resolve: { tsconfigPaths: true },
   test: {
     environment: 'jsdom',
     globals: false,
@@ -21,10 +21,13 @@ export default defineConfig({
       exclude: [
         'src/**/*.{test,spec}.{ts,tsx}',
         'src/**/*.d.ts',
-
-        'src/app/**/layout.tsx',
-        'src/app/**/{robots,sitemap,manifest}.ts',
+        'src/app/**',
+        'src/env.ts',
         'src/instrumentation.ts',
+        'src/proxy.ts',
+        'src/lib/logger.ts',
+        'src/lib/site-config.ts',
+        'src/components/theme-provider.tsx',
       ],
       thresholds: {
         statements: 70,

@@ -37,8 +37,10 @@ A commit that breaks an existing contract carries `BREAKING CHANGE:` in the body
 
 - Unit tests live next to the code as `*.test.ts(x)` and run under Vitest.
 - End-to-end specs live in `e2e/` and run under Playwright against a production build.
-- Coverage must stay at or above 70%. Genuinely untestable glue is excluded in
-  `vitest.config.ts` rather than papered over by lowering the threshold.
+- Coverage must stay at or above 70% for the unit layer. `vitest.config.ts` scopes that
+  measurement to `src/lib` and `src/components`, where the logic lives; route files,
+  `env.ts`, `proxy.ts` and `instrumentation.ts` are excluded because Playwright covers them.
+  Put new logic somewhere it can be measured rather than lowering the threshold.
 
 Test behaviour, not implementation: query by role and accessible name, not by CSS class.
 

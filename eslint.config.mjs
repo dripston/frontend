@@ -47,7 +47,7 @@ export default defineConfig([
       '**/*.test.{ts,tsx}',
       '**/*.spec.{ts,tsx}',
       'e2e/**/*.ts',
-      'scripts/**/*.{ts,mts}',
+      'scripts/**/*.{js,mjs,ts,mts}',
     ],
     rules: {
       'no-console': 'off',
