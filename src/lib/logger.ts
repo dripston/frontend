@@ -1,0 +1,46 @@
+import 'server-only';
+
+import pino, { type Logger } from 'pino';
+
+import { env } from '@/env';
+
+const isProduction = env.NODE_ENV === 'production';
+
+export const logger: Logger = pino({
+  level: env.LOG_LEVEL,
+
+  ...(isProduction
+    ? {}
+    : {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:HH:MM:ss',
+            ignore: 'pid,hostname',
+          },
+        },
+      }),
+
+  redact: {
+    paths: [
+      'password',
+      'token',
+      'secret',
+      'authorization',
+      '*.password',
+      '*.token',
+      '*.secret',
+      'req.headers.authorization',
+      'req.headers.cookie',
+    ],
+    censor: '[redacted]',
+  },
+  formatters: {
+    level: (label) => ({ level: label }),
+  },
+});
+
+export function createLogger(name: string): Logger {
+  return logger.child({ name });
+}

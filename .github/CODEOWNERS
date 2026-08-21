@@ -1,0 +1,6 @@
+* @your-org/maintainers
+
+/.github/            @your-org/platform
+/Dockerfile          @your-org/platform
+/src/proxy.ts        @your-org/security
+/src/env.ts          @your-org/security
