@@ -42,8 +42,8 @@ describe('Button', () => {
     );
     const button = screen.getByRole('button', { name: 'Delete' });
 
-    expect(button.className).toContain('bg-destructive');
-    expect(button.className).toContain('h-12');
+    expect(button.className).toContain('text-destructive');
+    expect(button.className).toContain('h-9');
   });
 
   it('lets a caller override a conflicting class', () => {
@@ -51,6 +51,22 @@ describe('Button', () => {
     const button = screen.getByRole('button', { name: 'Tall' });
 
     expect(button.className).toContain('h-20');
-    expect(button.className).not.toContain('h-10');
+    expect(button.className).not.toContain('h-8');
+  });
+
+  it('carries the data-slot hook shadcn styles target', () => {
+    render(<Button>Save</Button>);
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAttribute(
+      'data-slot',
+      'button',
+    );
+  });
+
+  it('renders as another element via the render prop', () => {
+    render(<Button render={<a href="/docs" />}>Docs</Button>);
+
+    const link = screen.getByRole('link', { name: 'Docs' });
+    expect(link).toHaveAttribute('href', '/docs');
+    expect(link.className).toContain('inline-flex');
   });
 });

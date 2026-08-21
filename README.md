@@ -50,14 +50,15 @@ src/
 │   ├── robots.ts           Generated robots.txt (blocks non-production)
 │   └── sitemap.ts          Generated sitemap.xml
 ├── components/
-│   └── ui/                 Reusable presentational primitives
+│   ├── ui/                 shadcn/ui primitives — owned in-repo, edit freely
+│   ├── mode-toggle.tsx     Light/dark/system switcher
+│   └── theme-provider.tsx  next-themes wrapper (keeps the layout a Server Component)
 ├── lib/
 │   ├── logger.ts           Structured pino logger (server-only)
 │   ├── site-config.ts      Branding and SEO constants
 │   └── utils.ts            `cn` and small shared helpers
 ├── env.ts                  Zod-validated environment variables
 ├── instrumentation.ts      Server startup hook + `onRequestError`
-└── proxy.ts                Per-request CSP nonce (was `middleware.ts`)
 e2e/                        Playwright specs
 ```
 
@@ -75,13 +76,14 @@ missing variable fails immediately with a readable message instead of surfacing 
 
 **Security headers.** HSTS, `nosniff`, `X-Frame-Options`, `Referrer-Policy`,
 `Permissions-Policy` and COOP are static in `next.config.ts`. The Content-Security-Policy is
-generated per request in `src/proxy.ts` with a fresh nonce and `strict-dynamic` — an
-end-to-end test asserts two requests never share a nonce.
+set in `next.config.ts` and asserted by an end-to-end test that also fails on any CSP
+violation logged while the page loads. See SECURITY.md for why it uses `'unsafe-inline'`
+rather than a nonce, and how to switch.
 
 **Testing.** Vitest and Testing Library for units, Playwright for end-to-end. The e2e suite
 builds and runs the standalone server, so headers, caching and the CSP behave exactly as they
 will in production — two of the specs assert the security headers and that no two responses
-share a CSP nonce. The 70% coverage floor applies to the unit layer (`src/lib`,
+trip a CSP violation. The 70% coverage floor applies to the unit layer (`src/lib`,
 `src/components`); route files are excluded there because e2e covers them.
 
 **CI.** Format, lint and typecheck run as a parallel matrix; unit tests, build and e2e run
@@ -90,6 +92,31 @@ CodeQL scans weekly. Dependabot batches updates by ecosystem.
 
 **Container.** Multi-stage build on the standalone output, running as a non-root user with a
 `HEALTHCHECK` wired to `/api/health`.
+
+## shadcn/ui
+
+Components are generated into `src/components/ui` and are **yours** — edit them directly, no
+wrapper layer and no upstream package to fight. Config lives in `components.json`.
+
+```bash
+pnpm dlx shadcn@latest add <component>
+```
+
+Built on **Base UI** (`@base-ui/react`), the successor to Radix from the same team. The main
+difference from older shadcn code you will find online: composition uses a `render` prop
+instead of `asChild`.
+
+```tsx
+<Button render={<Link href="/dashboard" />}>Dashboard</Button>
+```
+
+Theming is CSS variables in `src/app/globals.css`: `:root` and `.dark` define the raw tokens,
+and `@theme inline` maps them to Tailwind utilities (`bg-background`, `text-muted-foreground`).
+Change a colour in one place and it propagates everywhere. `--font-sans` and `--font-mono` are
+wired to the `next/font` Geist variables set in the root layout.
+
+Currently installed: button, card, input, label, badge, separator, dialog, dropdown-menu,
+skeleton, sonner.
 
 ## Environment variables
 

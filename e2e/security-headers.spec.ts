@@ -9,21 +9,34 @@ test.describe('security headers', () => {
     expect(headers['x-frame-options']).toBe('DENY');
     expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
     expect(headers['strict-transport-security']).toContain('max-age=');
-
     expect(headers['x-powered-by']).toBeUndefined();
   });
 
-  test('sets a nonce-based CSP that differs per request', async ({ request }) => {
-    const first = await request.get('/');
-    const second = await request.get('/');
+  test('sets a content security policy that locks down script origins', async ({
+    request,
+  }) => {
+    const csp = (await request.get('/')).headers()['content-security-policy'];
 
-    const cspOne = first.headers()['content-security-policy'];
-    const cspTwo = second.headers()['content-security-policy'];
+    expect(csp).toContain("default-src 'self'");
+    expect(csp).toContain("script-src 'self'");
+    expect(csp).toContain("object-src 'none'");
+    expect(csp).toContain("frame-ancestors 'none'");
+    expect(csp).toContain("base-uri 'self'");
+    expect(csp).toContain("form-action 'self'");
+    expect(csp).not.toContain("'unsafe-eval'");
+  });
 
-    expect(cspOne).toContain("frame-ancestors 'none'");
-    expect(cspOne).toContain("object-src 'none'");
-    expect(cspOne).toMatch(/nonce-[a-f0-9]+/);
+  test('loads the page without any CSP violation', async ({ page }) => {
+    const violations: string[] = [];
+    page.on('console', (message) => {
+      if (message.text().includes('Content Security Policy')) {
+        violations.push(message.text());
+      }
+    });
 
-    expect(cspOne).not.toBe(cspTwo);
+    await page.goto('/');
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
+    expect(violations).toEqual([]);
   });
 });

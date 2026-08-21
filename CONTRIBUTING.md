@@ -39,7 +39,7 @@ A commit that breaks an existing contract carries `BREAKING CHANGE:` in the body
 - End-to-end specs live in `e2e/` and run under Playwright against a production build.
 - Coverage must stay at or above 70% for the unit layer. `vitest.config.ts` scopes that
   measurement to `src/lib` and `src/components`, where the logic lives; route files,
-  `env.ts`, `proxy.ts` and `instrumentation.ts` are excluded because Playwright covers them.
+  `env.ts` and `instrumentation.ts` are excluded because Playwright covers them.
   Put new logic somewhere it can be measured rather than lowering the threshold.
 
 Test behaviour, not implementation: query by role and accessible name, not by CSS class.

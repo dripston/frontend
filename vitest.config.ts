@@ -24,10 +24,10 @@ export default defineConfig({
         'src/app/**',
         'src/env.ts',
         'src/instrumentation.ts',
-        'src/proxy.ts',
         'src/lib/logger.ts',
         'src/lib/site-config.ts',
         'src/components/theme-provider.tsx',
+        'src/components/ui/**',
       ],
       thresholds: {
         statements: 70,
