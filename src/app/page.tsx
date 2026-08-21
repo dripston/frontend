@@ -77,10 +77,12 @@ export default function HomePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-3">
-          <Button render={<a href="/api/health" />}>Health check</Button>
-          <Button variant="outline" render={<a href={siteConfig.links.github} />}>
-            Source
-          </Button>
+          <a href="/api/health">
+            <Button>Health check</Button>
+          </a>
+          <a href={siteConfig.links.github}>
+            <Button variant="outline">Source</Button>
+          </a>
         </CardContent>
       </Card>
     </main>
