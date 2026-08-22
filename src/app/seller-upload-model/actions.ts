@@ -59,10 +59,11 @@ export async function uploadModelAction(data: z.infer<typeof modelUploadSchema>)
       await qstashClient.publishJSON({
         url: `${env.NEXT_PUBLIC_APP_URL}/api/jobs/process-model`,
         body: {
-          modelId: customId,
-          userId: session.user.id,
           name: parsed.data.basicInfo.name,
-          niche: parsed.data.basicInfo.declared_niche,
+          model_id: customId,
+          seller_id: session.user.id,
+          endpoint_url: parsed.data.basicInfo.endpoint_url,
+          declared_niche: parsed.data.basicInfo.declared_niche,
         },
       });
     });
