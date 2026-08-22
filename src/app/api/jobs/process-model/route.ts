@@ -1,16 +1,12 @@
 import { verifySignatureAppRouter } from '@upstash/qstash/nextjs';
-import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { env } from '@/env';
-import { db } from '@/lib/db';
-import { model } from '@/lib/db/schema';
 import { logger } from '@/lib/logger';
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
-const BENCHMARK_TIMEOUT_MS = 240_000;
+const ENQUEUE_TIMEOUT_MS = 20_000;
 
 const BENCHMARK_NICHES = [
   'generic',
@@ -29,16 +25,14 @@ const jobSchema = z.object({
   seller_id: z.string().min(1),
   endpoint_url: z.url(),
   declared_niche: z.string().optional(),
+  model_identifier: z.string().optional(),
 });
 
-const reportSchema = z.object({
-  overall_accuracy_pct: z.number(),
-  average_latency_ms: z.number(),
-  total_passed: z.number(),
-  total_prompts: z.number(),
-  overall_composite_score: z.number(),
-  overall_grade: z.string(),
-  categories_tested: z.array(z.string()),
+const acceptedSchema = z.object({
+  job_id: z.string(),
+  status: z.string(),
+  queued_jobs: z.number().optional(),
+  workers: z.number().optional(),
 });
 
 function toBenchmarkNiche(value: string | undefined): BenchmarkNiche | null {
@@ -60,12 +54,10 @@ async function processModel(request: Request): Promise<Response> {
   const { name, model_id: modelId, seller_id: sellerId, endpoint_url } = job.data;
   const declaredNiche = toBenchmarkNiche(job.data.declared_niche);
 
-  logger.info({ modelId, declaredNiche }, 'process-model: benchmark started');
-
   let response: Response;
 
   try {
-    response = await fetch(`${env.BENCHMARK_API_URL}/api/benchmark`, {
+    response = await fetch(`${env.BENCHMARK_API_URL}/api/jobs/benchmark`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
@@ -74,62 +66,55 @@ async function processModel(request: Request): Promise<Response> {
         seller_id: sellerId,
         endpoint_url,
         declared_niche: declaredNiche,
+        model_identifier: job.data.model_identifier ?? null,
       }),
-      signal: AbortSignal.timeout(BENCHMARK_TIMEOUT_MS),
+      signal: AbortSignal.timeout(ENQUEUE_TIMEOUT_MS),
     });
   } catch (error) {
     logger.error({ error, modelId }, 'process-model: benchmark service unreachable');
     return Response.json({ error: 'Benchmark service unreachable' }, { status: 502 });
   }
 
-  if (!response.ok) {
+  if (response.status === 404) {
     logger.error(
-      { modelId, status: response.status, body: await response.text() },
-      'process-model: benchmark run failed',
+      { modelId },
+      'process-model: benchmark service does not know this model',
     );
-    return Response.json({ error: 'Benchmark run failed' }, { status: 502 });
-  }
-
-  const report = reportSchema.safeParse(await response.json());
-
-  if (!report.success) {
-    logger.error(
-      { modelId, issues: report.error.issues },
-      'process-model: unexpected benchmark response',
-    );
-    return Response.json({ error: 'Unexpected benchmark response' }, { status: 502 });
-  }
-
-  const [verified] = await db
-    .update(model)
-    .set({ isVerified: true })
-    .where(eq(model.id, modelId))
-    .returning({ id: model.id });
-
-  if (!verified) {
-    logger.error({ modelId }, 'process-model: model row no longer exists');
     return Response.json({ status: 'dropped', reason: 'model not found' });
   }
 
-  revalidatePath('/');
-  revalidatePath(`/models/${modelId}`);
+  if (!response.ok) {
+    logger.error(
+      { modelId, status: response.status, body: await response.text() },
+      'process-model: could not queue the benchmark',
+    );
+    return Response.json({ error: 'Could not queue the benchmark' }, { status: 502 });
+  }
+
+  const accepted = acceptedSchema.safeParse(await response.json());
+
+  if (!accepted.success) {
+    logger.error(
+      { modelId, issues: accepted.error.issues },
+      'process-model: unexpected enqueue response',
+    );
+    return Response.json({ error: 'Unexpected enqueue response' }, { status: 502 });
+  }
 
   logger.info(
     {
       modelId,
-      grade: report.data.overall_grade,
-      score: report.data.overall_composite_score,
-      accuracy: report.data.overall_accuracy_pct,
-      categories: report.data.categories_tested,
+      jobId: accepted.data.job_id,
+      queued: accepted.data.queued_jobs,
+      workers: accepted.data.workers,
     },
-    'process-model: model verified',
+    'process-model: benchmark queued',
   );
 
   return Response.json({
-    status: 'verified',
+    status: 'queued',
     model_id: modelId,
-    grade: report.data.overall_grade,
-    score: report.data.overall_composite_score,
+    job_id: accepted.data.job_id,
   });
 }
 
