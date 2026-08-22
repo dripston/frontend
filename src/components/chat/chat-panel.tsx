@@ -1,6 +1,12 @@
 'use client';
 
-import { ArrowLeftIcon, ArrowUpIcon, SparklesIcon, SquareIcon } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  ArrowUpIcon,
+  SparklesIcon,
+  SquareIcon,
+  Loader2Icon,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 
@@ -21,18 +27,31 @@ const STREAM_STEPS = 24;
 
 function ThinkingDots() {
   return (
-    <span className="flex items-center gap-1 py-1" role="status" aria-label="Thinking">
-      {[0, 1, 2].map((dot) => (
+    <div className="flex max-w-sm flex-col gap-2 rounded-xl border border-border bg-card px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-2">
+        <Loader2Icon className="size-4 animate-spin text-primary" />
+        <span className="text-sm font-medium text-foreground">Analyzing request...</span>
+      </div>
+      <div className="flex items-center gap-1">
+        <span className="text-xs text-muted-foreground">Thinking steps</span>
         <span
-          key={dot}
-          className="size-1.5 rounded-full bg-muted-foreground"
-          style={{
-            animation: 'thinking-bounce 1.2s ease-in-out infinite',
-            animationDelay: `${dot * 0.15}s`,
-          }}
-        />
-      ))}
-    </span>
+          className="ml-1 flex items-center gap-0.5"
+          role="status"
+          aria-label="Thinking"
+        >
+          {[0, 1, 2].map((dot) => (
+            <span
+              key={dot}
+              className="size-1 rounded-full bg-muted-foreground/60"
+              style={{
+                animation: 'thinking-bounce 1.2s ease-in-out infinite',
+                animationDelay: `${dot * 0.15}s`,
+              }}
+            />
+          ))}
+        </span>
+      </div>
+    </div>
   );
 }
 
@@ -158,7 +177,7 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
         </Badge>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto pb-6">
+      <div className="mx-auto min-h-0 w-full max-w-3xl flex-1 overflow-y-auto pb-6">
         {empty ? (
           <div className="flex h-full flex-col items-center justify-center gap-6 text-center">
             <div className="space-y-2">
@@ -230,7 +249,7 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
         )}
       </div>
 
-      <div className="pb-5">
+      <div className="mx-auto w-full max-w-3xl pb-5">
         <div className="group gradient-ring focus-within:[animation-duration:2.5s]">
           <span
             className="gradient-ring-glow group-focus-within:opacity-70"

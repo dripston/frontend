@@ -38,8 +38,8 @@ export function ModelCard({ model }: { model: Model }) {
   return (
     <Card
       className={cn(
-        'group relative gap-0 rounded-xl p-4 shadow-2xs transition-all',
-        'focus-within:border-primary/60 hover:border-primary/40 hover:shadow-sm',
+        'group relative gap-0 rounded-xl border-border bg-card p-5 shadow-sm transition-all',
+        'text-card-foreground focus-within:border-primary/60 hover:border-primary/40 hover:shadow-md',
       )}
     >
       <div className="flex items-center gap-2.5">
@@ -126,17 +126,17 @@ export function ModelCard({ model }: { model: Model }) {
         </Meta>
       </div>
 
-      <div className="mt-2.5 flex items-center gap-2">
+      <div className="mt-3.5 flex items-center gap-2">
         <Badge
           variant="secondary"
-          className="rounded-md font-mono text-[11px] font-medium tracking-wide"
+          className="rounded-md bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium tracking-wide text-secondary-foreground hover:bg-secondary/80"
         >
           {model.id}
         </Badge>
         {model.base ? (
           <Badge
             variant="outline"
-            className="rounded-md font-mono text-[11px] font-medium tracking-wide"
+            className="rounded-md border border-border bg-transparent px-2 py-0.5 font-mono text-[11px] font-medium tracking-wide text-foreground"
           >
             Base
           </Badge>
