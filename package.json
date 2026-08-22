@@ -12,7 +12,7 @@
     "dev": "next dev",
     "build": "next build",
     "postbuild": "node scripts/postbuild.mjs",
-    "start": "node .next/standalone/server.js",
+    "start": "HOSTNAME=0.0.0.0 node .next/standalone/server.js",
     "analyze": "ANALYZE=true next build",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
