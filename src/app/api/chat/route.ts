@@ -9,7 +9,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing "question" field' }, { status: 400 });
     }
 
-    const backendUrl = 'https://verifi-concierge.onrender.com/api/chat';
+    const backendUrl = process.env.CHAT_API_URL;
 
     const backendResponse = await fetch(`${backendUrl}`, {
       method: 'POST',
