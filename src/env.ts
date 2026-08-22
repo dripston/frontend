@@ -53,7 +53,10 @@ type Env = ServerEnv & ClientEnv;
 
 const isServer = typeof window === 'undefined';
 
-const skipValidation = Boolean(process.env.SKIP_ENV_VALIDATION);
+const skipValidation =
+  Boolean(process.env.SKIP_ENV_VALIDATION) ||
+  process.env.npm_lifecycle_event === 'build' ||
+  process.env.VERCEL === '1';
 
 const schema = isServer ? serverSchema.extend(clientSchema.shape) : clientSchema;
 
