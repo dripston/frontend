@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { MODEL_TASKS, models } from './models';
+import { MODEL_TASKS, getModel, models } from './models';
 
 describe('models', () => {
   it('gives every model a unique id', () => {
@@ -38,5 +38,16 @@ describe('models', () => {
       expect(model.downloads).toBeGreaterThanOrEqual(0);
       expect(model.likes).toBeGreaterThanOrEqual(0);
     }
+  });
+});
+
+describe('getModel', () => {
+  it('finds a model by id', () => {
+    const first = models[0]!;
+    expect(getModel(first.id)).toBe(first);
+  });
+
+  it('returns undefined for an unknown id', () => {
+    expect(getModel('mdl_00000000')).toBeUndefined();
   });
 });

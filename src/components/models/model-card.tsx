@@ -8,6 +8,7 @@ import {
   VideoIcon,
   ZapIcon,
 } from 'lucide-react';
+import Link from 'next/link';
 import type { ComponentType } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -37,8 +38,8 @@ export function ModelCard({ model }: { model: Model }) {
   return (
     <Card
       className={cn(
-        'group gap-0 overflow-hidden px-4 py-3.5 hover:border-primary/40 hover:bg-accent/40',
-        'transition-colors',
+        'group relative gap-0 px-4 py-3.5 hover:border-primary/40 hover:bg-accent/40',
+        'transition-colors focus-within:border-primary/60',
       )}
     >
       <div className="flex items-center gap-2.5">
@@ -52,19 +53,24 @@ export function ModelCard({ model }: { model: Model }) {
           {initials(model.org)}
         </span>
 
-        <Tooltip>
-          <TooltipTrigger
-            render={
-              <h3 className="min-w-0 truncate font-mono text-[0.95rem] font-medium tracking-tight">
-                <span className="text-muted-foreground">{model.org}/</span>
-                <span className="transition-colors group-hover:text-primary">
-                  {model.name}
-                </span>
-              </h3>
-            }
-          />
-          <TooltipContent className="font-mono">{fullName}</TooltipContent>
-        </Tooltip>
+        <h3 className="min-w-0 truncate font-mono text-[0.95rem] font-medium tracking-tight">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Link
+                  href={`/models/${model.id}`}
+                  className="outline-none before:absolute before:inset-0 before:content-['']"
+                >
+                  <span className="text-muted-foreground">{model.org}/</span>
+                  <span className="transition-colors group-hover:text-primary">
+                    {model.name}
+                  </span>
+                </Link>
+              }
+            />
+            <TooltipContent className="font-mono">{fullName}</TooltipContent>
+          </Tooltip>
+        </h3>
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">

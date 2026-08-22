@@ -224,3 +224,7 @@ export const models: Model[] = [
     base: true,
   },
 ];
+
+export function getModel(id: string): Model | undefined {
+  return models.find((model) => model.id === id);
+}
