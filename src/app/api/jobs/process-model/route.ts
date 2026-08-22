@@ -118,4 +118,13 @@ async function processModel(request: Request): Promise<Response> {
   });
 }
 
-export const POST = verifySignatureAppRouter(processModel);
+let verifiedHandler: ReturnType<typeof verifySignatureAppRouter> | null = null;
+
+export async function POST(request: Request): Promise<Response> {
+  verifiedHandler ??= verifySignatureAppRouter(processModel, {
+    currentSigningKey: env.QSTASH_CURRENT_SIGNING_KEY,
+    nextSigningKey: env.QSTASH_NEXT_SIGNING_KEY,
+  });
+
+  return verifiedHandler(request);
+}

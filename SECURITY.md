@@ -23,7 +23,6 @@ Only the latest release on `main` receives security fixes.
 | Server/client secret isolation                               | `src/env.ts` Proxy guard |
 | Credential redaction in logs                                 | `src/lib/logger.ts`      |
 | Dependency updates                                           | `.github/dependabot.yml` |
-| Non-root container                                           | `Dockerfile`             |
 
 ## Expectations for contributors
 

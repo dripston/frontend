@@ -1,15 +1,14 @@
 # Hackathon
 
 A production-grade [Next.js](https://nextjs.org) 16 starter: strict TypeScript, validated
-environment, hardened headers, and a container build.
+environment, hardened headers, and a standalone server build.
 
 ## Requirements
 
-| Tool   | Version                                  |
-| ------ | ---------------------------------------- |
-| Node   | 24 (see `.nvmrc`; anything ≥ 20.9 works) |
-| pnpm   | 9+ (`corepack enable`)                   |
-| Docker | optional, for container builds           |
+| Tool | Version                                  |
+| ---- | ---------------------------------------- |
+| Node | 24 (see `.nvmrc`; anything ≥ 20.9 works) |
+| pnpm | 9+ (`corepack enable`)                   |
 
 ## Getting started
 
@@ -162,17 +161,22 @@ The schema is not hand-invented: it mirrors `getAuthTables()` from the installed
 version. If you upgrade Better Auth, re-check that output before trusting the existing
 tables — `account.issuer`, for instance, only appeared in 1.7.
 
-## Docker
+## Deploying to Render
 
-```bash
-docker build -t hackathon .
-docker run -p 3000:3000 --env-file .env.local hackathon
-# or
-docker compose up --build
-```
+`render.yaml` describes a native Node web service — no container involved. Point Render at
+this repo as a Blueprint, or create a web service manually with:
 
-`NEXT_PUBLIC_*` values are baked in at build time, so pass them as `--build-arg` for any
-non-localhost deployment.
+- Build command: `corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm run build`
+- Start command: `pnpm start`
+- Health check path: `/api/health`
+
+`pnpm start` runs `.next/standalone/server.js`, which honours Render's `PORT` and binds
+`0.0.0.0`.
+
+Every variable marked `sync: false` in `render.yaml` must be filled in from the Render
+dashboard before the first deploy. `NEXT_PUBLIC_*` values are inlined at build time, so
+`NEXT_PUBLIC_APP_URL` has to hold the real public origin — changing it later needs a rebuild,
+not just a restart.
 
 ## Git hooks
 

@@ -106,10 +106,9 @@ export function ModelExplorer({ models }: { models: ModelSummary[] }) {
               licence and pricing.
             </p>
           </div>
-          <Button
-            nativeButton={false}
-            render={<Link href="/seller-upload-model">Upload a model</Link>}
-          />
+          <Button nativeButton={false} render={<Link href="/seller-upload-model" />}>
+            Upload a model
+          </Button>
         </div>
       ) : (
         <>

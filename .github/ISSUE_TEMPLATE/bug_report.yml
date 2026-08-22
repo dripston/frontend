@@ -35,6 +35,6 @@ body:
     id: environment
     attributes:
       label: Where does it happen
-      options: [Local development, Preview deployment, Production, Docker]
+      options: [Local development, Preview deployment, Production]
     validations:
       required: true

@@ -368,12 +368,12 @@ export default async function ModelPage({ params }: PageProps<'/models/[...id]'>
                       href={record.basicInfo.endpoint_url}
                       rel="noreferrer noopener"
                       target="_blank"
-                    >
-                      <ExternalLinkIcon />
-                      Open endpoint
-                    </a>
+                    />
                   }
-                />
+                >
+                  <ExternalLinkIcon />
+                  Open endpoint
+                </Button>
               ) : null}
             </div>
           </div>
