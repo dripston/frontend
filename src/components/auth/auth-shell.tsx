@@ -1,88 +1,53 @@
-import { CheckIcon, SparklesIcon } from 'lucide-react';
 import Link from 'next/link';
+import { SparklesIcon } from 'lucide-react';
 
+import { Kicker } from '@/components/kicker';
+import { ModeToggle } from '@/components/mode-toggle';
 import { siteConfig } from '@/lib/site-config';
 
-const HIGHLIGHTS = [
-  'Browse every model with filters that actually filter',
-  'Inspect weights, files and eval scores in one place',
-  'Ask the assistant anything about a repository',
-];
-
 export function AuthShell({
+  kicker,
   title,
   subtitle,
   children,
   footer,
 }: {
+  kicker: string;
   title: string;
   subtitle: string;
   children: React.ReactNode;
   footer: React.ReactNode;
 }) {
   return (
-    <main className="grid min-h-dvh lg:grid-cols-2">
-      <div className="flex flex-col justify-center px-6 py-12 sm:px-12">
-        <div className="mx-auto w-full max-w-sm">
+    <div className="flex min-h-dvh flex-col">
+      <header className="border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-5xl items-center px-6">
           <Link
             href="/"
-            className="mb-10 inline-flex items-center gap-2 text-sm font-semibold tracking-tight"
+            className="flex items-center gap-2 text-sm font-semibold tracking-tight"
           >
-            <span className="gradient-ring grid size-7 place-items-center rounded-full">
-              <span className="grid size-full place-items-center rounded-full bg-background">
-                <SparklesIcon className="size-3.5 text-primary" />
-              </span>
-            </span>
+            <SparklesIcon className="size-4 text-primary" />
             {siteConfig.name}
           </Link>
-
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-          <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
-
-          <div className="mt-8">{children}</div>
-
-          <p className="mt-8 text-center text-sm text-muted-foreground">{footer}</p>
+          <div className="ml-auto">
+            <ModeToggle />
+          </div>
         </div>
-      </div>
+      </header>
 
-      <aside className="relative hidden overflow-hidden bg-card lg:flex lg:flex-col lg:justify-center lg:px-14">
-        <span
-          aria-hidden="true"
-          className="absolute -top-24 -right-24 size-96 rounded-full bg-gradient-to-br from-primary/25 to-transparent blur-3xl"
-          style={{ animation: 'aurora-drift 9s ease-in-out infinite' }}
-        />
-        <span
-          aria-hidden="true"
-          className="absolute -bottom-32 -left-20 size-96 rounded-full bg-gradient-to-tr from-chart-4/40 to-transparent blur-3xl"
-          style={{ animation: 'aurora-drift 11s ease-in-out infinite reverse' }}
-        />
+      <main className="flex flex-1 items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-2xs sm:p-8">
+            <Kicker className="mb-2">{kicker}</Kicker>
+            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+            <p className="mt-1.5 text-sm text-muted-foreground">{subtitle}</p>
 
-        <span
-          aria-hidden="true"
-          className="absolute top-1/3 -right-10 size-72 rounded-full bg-gradient-to-bl from-chart-2/25 to-transparent blur-3xl"
-          style={{ animation: 'aurora-drift 13s ease-in-out infinite' }}
-        />
+            <div className="mt-6">{children}</div>
+          </div>
 
-        <div className="relative max-w-md">
-          <p className="font-mono text-xs tracking-widest text-primary uppercase">
-            Model registry
-          </p>
-          <p className="mt-4 text-3xl font-semibold tracking-tight text-balance">
-            Everything about a model, on one page.
-          </p>
-
-          <ul className="mt-8 space-y-4">
-            {HIGHLIGHTS.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-sm">
-                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-primary/15 text-primary">
-                  <CheckIcon className="size-3" />
-                </span>
-                {item}
-              </li>
-            ))}
-          </ul>
+          <p className="mt-6 text-center text-sm text-muted-foreground">{footer}</p>
         </div>
-      </aside>
-    </main>
+      </main>
+    </div>
   );
 }

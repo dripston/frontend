@@ -1,3 +1,13 @@
+packageExtensions:
+  '@better-auth/infra':
+    peerDependencies:
+      '@better-auth/scim': '*'
+      '@better-auth/sso': '*'
+    peerDependenciesMeta:
+      '@better-auth/scim':
+        optional: true
+      '@better-auth/sso':
+        optional: true
 allowBuilds:
   esbuild: true
   sharp: false

@@ -112,6 +112,7 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
         <Button
           variant="ghost"
           size="icon-sm"
+          nativeButton={false}
           render={<Link href="/" />}
           aria-label="Back to models"
         >

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function SignupPage() {
   return (
     <AuthShell
+      kicker="Create account"
       title="Create your account"
       subtitle="Free to start. No card required."
       footer={

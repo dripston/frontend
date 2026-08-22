@@ -27,10 +27,15 @@ export function UserMenu() {
   if (!session) {
     return (
       <>
-        <Button variant="ghost" size="sm" render={<Link href="/login" />}>
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          render={<Link href="/login" />}
+        >
           Sign in
         </Button>
-        <Button size="sm" render={<Link href="/signup" />}>
+        <Button size="sm" nativeButton={false} render={<Link href="/signup" />}>
           Sign up
         </Button>
       </>

@@ -55,7 +55,7 @@ pnpm dlx shadcn@latest add dialog
 The components are **yours** once generated — edit them directly. This project is built on Base UI, so composition uses a \`render\` prop:
 
 \`\`\`tsx
-<Button render={<Link href="/chat" />}>Open chat</Button>
+<Button nativeButton={false} render={<Link href="/chat" />}>Open chat</Button>
 \`\`\``,
   },
 ];

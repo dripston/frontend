@@ -8,12 +8,10 @@ import { useId, useState } from 'react';
 import { Field } from '@/components/auth/field';
 import { PasswordField } from '@/components/auth/password-field';
 import { PasswordMeter } from '@/components/auth/password-meter';
-import { SocialButtons } from '@/components/auth/social-buttons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { signUp } from '@/lib/auth-client';
 import { collectErrors, signupSchema, type FieldErrors } from '@/lib/auth-schema';
 
@@ -66,15 +64,7 @@ export function SignupForm() {
   }
 
   return (
-    <div className="space-y-6">
-      <SocialButtons onError={setFormError} />
-
-      <div className="flex items-center gap-3">
-        <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground">or</span>
-        <Separator className="flex-1" />
-      </div>
-
+    <div>
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <Field id={nameId} label="Full name" error={errors.name}>
           <Input
