@@ -1,6 +1,7 @@
 'use client';
 
 import { PlusIcon, Trash2Icon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useFieldArray, useForm, type Path } from 'react-hook-form';
 
@@ -279,6 +280,7 @@ function FormField({
 }
 
 export function ModelUploadForm() {
+  const router = useRouter();
   const [submitted, setSubmitted] = useState(false);
 
   const {
@@ -409,15 +411,14 @@ export function ModelUploadForm() {
       const response = await uploadModelAction(parsed.data);
       if (response.success) {
         setSubmitted(true);
-        toast.success('Model uploaded successfully!');
+        toast.success('Model published');
+        router.push(`/models/${response.id}`);
       } else {
         toast.error(response.error || 'Failed to upload model');
-        console.error(response.error, response.details);
         setSubmitted(false);
       }
-    } catch (e) {
+    } catch {
       toast.error('An unexpected error occurred');
-      console.error('Action failed:', e);
       setSubmitted(false);
     }
   });
@@ -524,7 +525,7 @@ export function ModelUploadForm() {
                 <option value="other">Other</option>
               </Select>
             </FormField>
-            <FormField label="Total size" error={error('files.totalSize')}>
+            <FormField label="Total size (GB)" error={error('files.totalSize')}>
               <Input {...register('files.totalSize')} placeholder="13.4" />
             </FormField>
           </div>
@@ -553,7 +554,10 @@ export function ModelUploadForm() {
                       placeholder="model.safetensors"
                     />
                   </FormField>
-                  <FormField label="Size" error={error(`files.modelFiles.${index}.size`)}>
+                  <FormField
+                    label="Size (GB)"
+                    error={error(`files.modelFiles.${index}.size`)}
+                  >
                     <Input
                       {...register(`files.modelFiles.${index}.size`)}
                       placeholder="4.8"
@@ -625,13 +629,22 @@ export function ModelUploadForm() {
           <FormField label="Parameters" error={error('technical.parameters')}>
             <Input {...register('technical.parameters')} placeholder="8B" />
           </FormField>
-          <FormField label="Context length" error={error('technical.contextLength')}>
+          <FormField
+            label="Context length (tokens)"
+            error={error('technical.contextLength')}
+          >
             <Input {...register('technical.contextLength')} placeholder="8192" />
           </FormField>
-          <FormField label="VRAM requirement" error={error('technical.vramRequirement')}>
+          <FormField
+            label="VRAM requirement (GB)"
+            error={error('technical.vramRequirement')}
+          >
             <Input {...register('technical.vramRequirement')} placeholder="16" />
           </FormField>
-          <FormField label="RAM requirement" error={error('technical.ramRequirement')}>
+          <FormField
+            label="RAM requirement (GB)"
+            error={error('technical.ramRequirement')}
+          >
             <Input {...register('technical.ramRequirement')} placeholder="32" />
           </FormField>
           <div className="space-y-1.5">
@@ -754,10 +767,13 @@ export function ModelUploadForm() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
-            <FormField label="Latency" error={error('evaluation.latency')}>
+            <FormField label="Latency (ms)" error={error('evaluation.latency')}>
               <Input {...register('evaluation.latency')} placeholder="120" />
             </FormField>
-            <FormField label="Throughput" error={error('evaluation.throughput')}>
+            <FormField
+              label="Throughput (tokens/s)"
+              error={error('evaluation.throughput')}
+            >
               <Input {...register('evaluation.throughput')} placeholder="45" />
             </FormField>
           </div>

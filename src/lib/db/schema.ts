@@ -1,4 +1,17 @@
-import { boolean, pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+
+import type {
+  ModelBasicInfo,
+  ModelCardContent,
+  ModelCategory,
+  ModelEvaluation,
+  ModelFilesInfo,
+  ModelLicense,
+  ModelPricing,
+  ModelTechnical,
+  ModelTraining,
+  ModelUsage,
+} from '../../zod-schema/upload-model-schema';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -75,16 +88,21 @@ export const model = pgTable('model', {
     .references(() => user.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   niche: text('niche').notNull(),
-  category: text('category').notNull(),
-  basicInfo: jsonb('basic_info').notNull(),
-  files: jsonb('files').notNull(),
-  technical: jsonb('technical').notNull(),
-  training: jsonb('training').notNull(),
-  evaluation: jsonb('evaluation').notNull(),
-  usage: jsonb('usage').notNull(),
-  license: jsonb('license').notNull(),
-  pricing: jsonb('pricing').notNull(),
-  modelCard: jsonb('model_card').notNull(),
+  category: text('category').$type<ModelCategory>().notNull(),
+  task: text('task').notNull(),
+  version: text('version').notNull(),
+  endpointUrl: text('endpoint_url').notNull(),
+  downloads: integer('downloads').notNull().default(0),
+  likes: integer('likes').notNull().default(0),
+  basicInfo: jsonb('basic_info').$type<ModelBasicInfo>().notNull(),
+  files: jsonb('files').$type<ModelFilesInfo>().notNull(),
+  technical: jsonb('technical').$type<ModelTechnical>().notNull(),
+  training: jsonb('training').$type<ModelTraining>().notNull(),
+  evaluation: jsonb('evaluation').$type<ModelEvaluation>().notNull(),
+  usage: jsonb('usage').$type<ModelUsage>().notNull(),
+  license: jsonb('license').$type<ModelLicense>().notNull(),
+  pricing: jsonb('pricing').$type<ModelPricing>().notNull(),
+  modelCard: jsonb('model_card').$type<ModelCardContent>().notNull(),
   createdAt: timestamp('created_at', { withTimezone: true })
     .$defaultFn(() => new Date())
     .notNull(),

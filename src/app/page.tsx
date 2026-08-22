@@ -1,9 +1,13 @@
 import { ModelExplorer } from '@/components/models/model-explorer';
 import { SiteHeader } from '@/components/site-header';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { models } from '@/lib/models';
+import { listModels } from '@/lib/model-repository';
 
-export default function HomePage() {
+export const dynamic = 'force-dynamic';
+
+export default async function HomePage() {
+  const models = await listModels();
+
   return (
     <TooltipProvider>
       <SiteHeader />
