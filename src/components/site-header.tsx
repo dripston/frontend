@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import { SparklesIcon } from 'lucide-react';
+import { Cog } from 'lucide-react';
 
 import { UserMenu } from '@/components/auth/user-menu';
 import { ModeToggle } from '@/components/mode-toggle';
-import { siteConfig } from '@/lib/site-config';
-
 const NAV = [
   { href: '/', label: 'Models' },
+  { href: '/arena', label: 'Arena' },
   { href: '/chat', label: 'Assistant' },
   { href: '/purchases', label: 'Purchases' },
 ] as const;
@@ -19,10 +18,10 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2.5 text-[15px] font-semibold tracking-tight transition-opacity hover:opacity-80"
         >
-          <div className="flex size-7 items-center justify-center rounded-[calc(var(--radius)*0.8)] bg-primary">
-            <SparklesIcon className="size-3.5 text-primary-foreground" />
+          <div className="flex size-8 items-center justify-center rounded-[calc(var(--radius)*0.8)] bg-primary">
+            <Cog className="size-6 text-primary-foreground" />
           </div>
-          {siteConfig.name}
+          Verifi
         </Link>
 
         <nav className="ml-2 hidden items-center gap-5 md:flex">
