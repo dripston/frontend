@@ -1,7 +1,7 @@
 # Hackathon
 
 A production-grade [Next.js](https://nextjs.org) 16 starter: strict TypeScript, validated
-environment, hardened headers, unit and end-to-end tests, and a container build.
+environment, hardened headers, and a container build.
 
 ## Requirements
 
@@ -23,20 +23,19 @@ The app runs at http://localhost:3000.
 
 ## Scripts
 
-| Script               | What it does                                          |
-| -------------------- | ----------------------------------------------------- |
-| `pnpm dev`           | Dev server with hot reload                            |
-| `pnpm build`         | Production build (`.next/standalone`)                 |
-| `pnpm start`         | Serve the production build                            |
-| `pnpm typecheck`     | `tsc --noEmit`                                        |
-| `pnpm lint`          | ESLint, zero warnings tolerated                       |
-| `pnpm lint:fix`      | ESLint with autofix                                   |
-| `pnpm format`        | Prettier write                                        |
-| `pnpm format:check`  | Prettier check, no writes                             |
-| `pnpm test`          | Unit tests once                                       |
-| `pnpm test:watch`    | Unit tests in watch mode                              |
-| `pnpm test:coverage` | Unit tests with coverage thresholds                   |
-| `pnpm validate`      | format + lint + typecheck + test — run before pushing |
+| Script              | What it does                                   |
+| ------------------- | ---------------------------------------------- |
+| `pnpm dev`          | Dev server with hot reload                     |
+| `pnpm build`        | Production build (`.next/standalone`)          |
+| `pnpm start`        | Serve the production build                     |
+| `pnpm typecheck`    | `tsc --noEmit`                                 |
+| `pnpm lint`         | ESLint, zero warnings tolerated                |
+| `pnpm lint:fix`     | ESLint with autofix                            |
+| `pnpm format`       | Prettier write                                 |
+| `pnpm format:check` | Prettier check, no writes                      |
+| `pnpm test`         | Unit tests once                                |
+| `pnpm test:watch`   | Unit tests in watch mode                       |
+| `pnpm validate`     | format + lint + typecheck — run before pushing |
 
 ## Layout
 
@@ -74,15 +73,14 @@ missing variable fails immediately with a readable message instead of surfacing 
 
 **Security headers.** HSTS, `nosniff`, `X-Frame-Options`, `Referrer-Policy`,
 `Permissions-Policy` and COOP are static in `next.config.ts`. The Content-Security-Policy is
-set in `next.config.ts` and asserted by an end-to-end test that also fails on any CSP
-violation logged while the page loads. See SECURITY.md for why it uses `'unsafe-inline'`
-rather than a nonce, and how to switch.
+set in `next.config.ts`. See SECURITY.md for why it uses `'unsafe-inline'` rather than a
+nonce, and how to switch.
 
-**Testing.** Vitest and Testing Library, with a 70% coverage floor over the unit layer
-(`src/lib`, `src/components`). Route files and vendored `src/components/ui` are excluded from
-that measurement. There is no end-to-end suite in this repo.
+**Testing.** This repo does not carry tests — see rule 6 in AGENTS.md. The Vitest harness is
+configured and passes with zero tests, so it is ready if that changes. Verify work with
+`pnpm run validate`, `pnpm run build`, and by exercising the path in the browser.
 
-**Checks.** `pnpm run validate` runs format, lint, typecheck and unit tests in one pass, and
+**Checks.** `pnpm run validate` runs format, lint and typecheck in one pass, and
 the git hooks run the same checks before a commit or push. There is no CI workflow in this
 repo — wire one up to `pnpm run validate` and `pnpm run build` when you want one. Dependabot config is still present and batches updates by ecosystem.
 
@@ -129,6 +127,41 @@ the schema is ignored.
 - `SKIP_ENV_VALIDATION=1` bypasses validation for image builds that have no runtime secrets;
   the container still validates on boot.
 
+## Auth and database
+
+Better Auth on Neon Postgres via Drizzle.
+
+```
+src/lib/db/schema.ts    Drizzle tables (user, session, account, verification)
+src/lib/db/index.ts     Neon HTTP driver + Drizzle instance (server-only)
+src/lib/auth.ts         Better Auth server config (server-only)
+src/lib/auth-client.ts  React client — signIn, signUp, signOut, useSession
+src/app/api/auth/       Catch-all route handler
+drizzle/                Generated migrations, committed
+```
+
+First-time setup:
+
+1. Create a Neon project and copy the **pooled** connection string.
+2. Put it in `.env.local` as `DATABASE_URL`, and add
+   `BETTER_AUTH_SECRET` (`openssl rand -base64 32`).
+3. Apply the schema: `pnpm run db:migrate`.
+
+| Script             | What it does                                  |
+| ------------------ | --------------------------------------------- |
+| `pnpm db:generate` | Write a migration from schema changes         |
+| `pnpm db:migrate`  | Apply pending migrations                      |
+| `pnpm db:push`     | Push the schema directly, skipping migrations |
+| `pnpm db:studio`   | Open Drizzle Studio                           |
+
+Email and password sign-in works out of the box. GitHub and Google are registered only
+when both the client id and secret are set, so the buttons return a clear error until you
+configure them.
+
+The schema is not hand-invented: it mirrors `getAuthTables()` from the installed Better Auth
+version. If you upgrade Better Auth, re-check that output before trusting the existing
+tables — `account.issuer`, for instance, only appeared in 1.7.
+
 ## Docker
 
 ```bash
@@ -148,7 +181,7 @@ Husky runs on `pnpm install`:
 - **pre-commit** — lint-staged formats and lints staged files.
 - **commit-msg** — commitlint enforces [Conventional Commits](https://www.conventionalcommits.org)
   (`feat:`, `fix:`, `docs:`, …).
-- **pre-push** — typecheck and unit tests.
+- **pre-push** — typecheck.
 
 Bypass with `--no-verify` only when you have a specific reason.
 

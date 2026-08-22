@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { SparklesIcon } from 'lucide-react';
 
+import { UserMenu } from '@/components/auth/user-menu';
 import { ModeToggle } from '@/components/mode-toggle';
-import { Button } from '@/components/ui/button';
 import { siteConfig } from '@/lib/site-config';
 
 const NAV = [
@@ -36,12 +36,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <Button variant="ghost" size="sm" render={<Link href="/login" />}>
-            Sign in
-          </Button>
-          <Button size="sm" render={<Link href="/signup" />}>
-            Sign up
-          </Button>
+          <UserMenu />
           <ModeToggle />
         </div>
       </div>

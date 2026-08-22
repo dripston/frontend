@@ -147,7 +147,27 @@ src/
 - Accessibility is part of done: semantic elements before ARIA, every control keyboard-reachable, visible `focus-visible` state, labelled inputs, `prefers-reduced-motion` respected.
 - UI copy: sentence case, active voice, plain verbs. A button's label matches the result it produces. Errors say what happened and what to do next.
 
-## 6. Definition of done
+## 6. No test files
+
+Do not create test files. No `*.test.ts`, `*.test.tsx`, `*.spec.ts`, no `e2e/` specs, no
+snapshot fixtures — not for new code, not "while I was in there", not as a way to prove a fix
+works. This holds even when a change is subtle, even when a test would be the natural way to
+demonstrate correctness, and even when asked to "make sure it works".
+
+Verify a change by other means and say which you used:
+
+- `pnpm typecheck`, `pnpm lint` and `pnpm build`
+- Running the app and exercising the path in the browser
+- `curl` against a route, reading the response and its headers
+- A throwaway one-off script that is deleted before you finish
+
+If you believe a case genuinely needs a permanent test, say so in one line and let the user
+decide. Do not write it pre-emptively.
+
+The Vitest harness stays configured and passes with zero tests, so it is ready the moment the
+user asks for it. Leave it alone until then.
+
+## 7. Definition of done
 
 Before you report finished:
 

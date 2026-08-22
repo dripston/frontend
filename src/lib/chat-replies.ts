@@ -17,7 +17,7 @@ The app follows the App Router conventions with a thin, testable core.
 - \`src/lib\` — pure logic: formatters, data and helpers
 - \`src/env.ts\` — Zod-validated environment
 
-Everything in \`src/lib\` and \`src/components\` is covered by unit tests.`,
+Pure logic lives in \`src/lib\`, so routes and components stay thin.`,
   },
   {
     match: /model ?card|card component/i,

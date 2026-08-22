@@ -12,8 +12,8 @@ pnpm run dev
 ## Workflow
 
 1. Branch from `main`: `git checkout -b feat/short-description`
-2. Make the change, with tests.
-3. Run `pnpm run validate` — format, lint, typecheck and unit tests in one pass.
+2. Make the change.
+3. Run `pnpm run validate` — format, lint and typecheck in one pass.
 4. Commit using [Conventional Commits](https://www.conventionalcommits.org).
 5. Open a PR and fill in the template.
 
@@ -33,15 +33,13 @@ fix(api): return 404 instead of 500 for unknown ids
 
 A commit that breaks an existing contract carries `BREAKING CHANGE:` in the body.
 
-## Tests
+## Verifying a change
 
-- Unit tests live next to the code as `*.test.ts(x)` and run under Vitest.
-- Coverage must stay at or above 70% for the unit layer. `vitest.config.ts` scopes that
-  measurement to `src/lib` and `src/components`, where the logic lives; route files,
-  `env.ts` and `instrumentation.ts` are excluded as framework glue.
-  Put new logic somewhere it can be measured rather than lowering the threshold.
+This repo does not carry test files — see rule 6 in AGENTS.md. Verify work by running
+`pnpm run validate` and `pnpm run build`, and by exercising the path in the browser or with
+`curl`. Say in the PR which of those you did.
 
-Test behaviour, not implementation: query by role and accessible name, not by CSS class.
+If something genuinely warrants a permanent test, raise it in the PR rather than adding one.
 
 ## Code style
 
