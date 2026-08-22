@@ -14,7 +14,6 @@ export default function HomePage() {
           </span>
           <ModeToggle />
         </div>
-
         <ModelExplorer models={models} />
       </main>
     </TooltipProvider>
