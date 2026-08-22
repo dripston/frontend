@@ -10,7 +10,8 @@
   "packageManager": "pnpm@11.18.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npx @cloudflare/next-on-pages",
+    "deploy": "npx wrangler pages deploy .vercel/output/static",
     "postbuild": "node scripts/postbuild.mjs",
     "start": "HOSTNAME=0.0.0.0 node .next/standalone/server.js",
     "analyze": "ANALYZE=true next build",
