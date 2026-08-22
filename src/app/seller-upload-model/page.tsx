@@ -16,7 +16,7 @@ export default async function SellerUploadModelPage() {
   });
 
   if (!session?.user) {
-    redirect('/sign-in?callbackUrl=/seller-upload-model');
+    redirect('/login');
   }
   return (
     <main className="mx-auto w-full max-w-6xl px-5 py-8">
