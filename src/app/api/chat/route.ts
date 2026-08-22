@@ -5,9 +5,13 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { question, history } = body;
 
-    const backendUrl = process.env.CONCIERGE_API_URL || 'http://127.0.0.1:8100';
-    
-    const response = await fetch(`${backendUrl}/api/chat`, {
+    if (!question || typeof question !== 'string') {
+      return NextResponse.json({ error: 'Missing "question" field' }, { status: 400 });
+    }
+
+    const backendUrl = 'https://verifi-concierge.onrender.com/api/chat';
+
+    const backendResponse = await fetch(`${backendUrl}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -18,17 +22,31 @@ export async function POST(req: Request) {
       }),
     });
 
-    if (!response.ok) {
-      throw new Error(`Backend returned ${response.status} ${response.statusText}`);
+    if (!backendResponse.ok || !backendResponse.body) {
+      return NextResponse.json(
+        {
+          error: `Backend returned ${backendResponse.status} ${backendResponse.statusText}`,
+        },
+        { status: 502 },
+      );
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error: any) {
+    // Pass the NDJSON stream straight through to the client instead of
+    // buffering it with response.json(). This preserves the chunk-by-chunk
+    // timing that makes the UI feel like it's actually streaming.
+    return new NextResponse(backendResponse.body, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/x-ndjson; charset=utf-8',
+        'Cache-Control': 'no-cache, no-transform',
+        'X-Accel-Buffering': 'no', // disable proxy buffering (e.g. nginx) if present
+      },
+    });
+  } catch (error: unknown) {
     console.error('Chat API error:', error);
     return NextResponse.json(
       { error: 'Failed to communicate with concierge service' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
