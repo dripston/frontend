@@ -174,7 +174,7 @@ export const modelUploadSchema = z.object({
     }),
   }),
   pricing: z.object({
-    type: z.enum(['free', 'one-time', 'subscription', 'usage-based']),
+    type: z.enum(['free', 'hourly', 'subscription', 'usage-based']),
 
     price: z.number().min(0).optional(),
 

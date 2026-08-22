@@ -112,7 +112,7 @@ type UploadFormValues = {
     ownershipConfirmation: boolean;
   };
   pricing: {
-    type: 'free' | 'one-time' | 'subscription' | 'usage-based';
+    type: 'free' | 'hourly' | 'subscription' | 'usage-based';
     price: string;
     currency: 'USD' | 'EUR' | 'GBP' | 'INR';
     refundPolicy: string;
@@ -996,7 +996,7 @@ export function ModelUploadForm() {
           <FormField label="Pricing type" error={error('pricing.type')}>
             <Select {...register('pricing.type')}>
               <option value="free">Free</option>
-              <option value="one-time">One-time</option>
+              <option value="hourly">Hourly</option>
               <option value="subscription">Subscription</option>
               <option value="usage-based">Usage-based</option>
             </Select>

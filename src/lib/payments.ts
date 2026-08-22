@@ -147,7 +147,7 @@ export function quoteFor(pricing: ModelPricing): PaymentQuote | null {
 
 export const BILLING_NOTES: Record<PricingType, string> = {
   free: 'No charge',
-  'one-time': 'One-time payment, lifetime access',
+  'hourly': 'Hourly payment, billed per hour of usage',
   subscription: 'Billed monthly until cancelled',
   'usage-based': 'Prepaid usage credit',
 };

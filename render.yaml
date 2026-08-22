@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: hackathon-frontend
+    name: frontend
     runtime: node
     plan: free
     buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm run build

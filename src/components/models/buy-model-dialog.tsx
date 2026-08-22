@@ -147,7 +147,7 @@ export function BuyModelDialog({
     return (
       <Button nativeButton={false} render={<Link href="/login" />}>
         <LockIcon />
-        Sign in to buy
+        Sign in to rent
       </Button>
     );
   }
@@ -188,7 +188,7 @@ export function BuyModelDialog({
 
       if (result.success) {
         setReceipt(result.receipt);
-        toast.success(`Payment complete — you now own ${modelName}`);
+        toast.success(`Payment complete — your hourly rental of ${modelName} is active`);
         router.refresh();
         return;
       }
@@ -232,7 +232,7 @@ export function BuyModelDialog({
         render={
           <Button>
             <LockIcon />
-            Buy for {formatMoney(quote.total, quote.currency)}
+            Rent for {formatMoney(quote.total, quote.currency)} / hr
           </Button>
         }
       />

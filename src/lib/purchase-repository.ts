@@ -28,6 +28,28 @@ export async function getPurchase(
   return record ?? null;
 }
 
+export async function getPurchaseById(
+  userId: string,
+  purchaseId: string,
+): Promise<PurchaseWithModel | null> {
+  const [record] = await db
+    .select({
+      ...getTableColumns(purchase),
+      modelName: model.name,
+      modelTask: model.task,
+      modelVersion: model.version,
+      endpointUrl: model.endpointUrl,
+      sellerName: user.name,
+    })
+    .from(purchase)
+    .innerJoin(model, eq(purchase.modelId, model.id))
+    .innerJoin(user, eq(model.userId, user.id))
+    .where(and(eq(purchase.id, purchaseId), eq(purchase.userId, userId)))
+    .limit(1);
+
+  return record ?? null;
+}
+
 export async function listPurchases(userId: string): Promise<PurchaseWithModel[]> {
   return db
     .select({

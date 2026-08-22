@@ -73,10 +73,10 @@ export const TRAINING_METHOD_LABELS: Record<ModelTrainingMethod, string> = {
   other: 'Other',
 };
 
-export const PRICING_TYPE_LABELS: Record<ModelPricing['type'], string> = {
+export const PRICING_TYPE_LABELS = {
   free: 'Free',
-  'one-time': 'One-time',
-  subscription: 'Subscription',
+  'hourly': 'Hourly',
+  subscription: 'Monthly subscription',
   'usage-based': 'Usage-based',
 };
 
