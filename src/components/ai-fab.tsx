@@ -4,10 +4,12 @@ import { SparklesIcon } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const HIDDEN_ON = ['/chat', '/login', '/signup'];
+
 export function AiFab() {
   const pathname = usePathname();
 
-  if (pathname?.startsWith('/chat')) return null;
+  if (HIDDEN_ON.some((route) => pathname?.startsWith(route))) return null;
 
   return (
     <div className="fixed right-5 bottom-5 z-40">

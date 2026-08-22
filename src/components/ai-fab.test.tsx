@@ -20,10 +20,17 @@ describe('AiFab', () => {
     );
   });
 
-  it('hides itself on the chat route', () => {
-    pathname.current = '/chat';
+  it.each(['/chat', '/login', '/signup'])('hides itself on %s', (route) => {
+    pathname.current = route;
     const { container } = render(<AiFab />);
 
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it('still shows on a model detail route', () => {
+    pathname.current = '/models/mdl_7Kq2XvN4';
+    render(<AiFab />);
+
+    expect(screen.getByRole('link', { name: 'Open the AI assistant' })).toBeVisible();
   });
 });
