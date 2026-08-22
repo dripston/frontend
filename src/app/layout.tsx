@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Noto_Serif_Georgian } from 'next/font/google';
 
+import { AiFab } from '@/components/ai-fab';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { siteConfig } from '@/lib/site-config';
@@ -44,8 +45,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
+    { media: '(prefers-color-scheme: light)', color: '#eaecf0' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -64,6 +65,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           disableTransitionOnChange
         >
           {children}
+          <AiFab />
           <Toaster />
         </ThemeProvider>
       </body>
