@@ -8,7 +8,7 @@ import { RichText } from '@/components/chat/rich-text';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { SUGGESTED_PROMPTS, replyTo } from '@/lib/chat-replies';
+import { SUGGESTED_PROMPTS } from '@/lib/chat-replies';
 import { cn } from '@/lib/utils';
 
 type Message = {
@@ -65,7 +65,7 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
 
       setDraft('');
       setStreaming(true);
-      
+
       // Update UI with user message immediately
       setMessages((current) => [
         ...current,
@@ -109,7 +109,9 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
         console.error('Chat error:', error);
         setMessages((current) =>
           current.map((message) =>
-            message.id === `a-${stamp}` ? { ...message, content: 'An error occurred while fetching the response.' } : message,
+            message.id === `a-${stamp}`
+              ? { ...message, content: 'An error occurred while fetching the response.' }
+              : message,
           ),
         );
         setStreaming(false);
