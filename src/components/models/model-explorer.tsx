@@ -65,7 +65,7 @@ export function ModelExplorer({ models }: { models: Model[] }) {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Filter by name"
             aria-label="Filter by name"
-            className="h-9 rounded-full pl-9"
+            className="h-10 rounded-lg pl-9"
           />
         </div>
 
@@ -85,7 +85,7 @@ export function ModelExplorer({ models }: { models: Model[] }) {
           pressed={inferenceOnly}
           onPressedChange={setInferenceOnly}
           aria-label="Inference available"
-          className="rounded-full data-[state=on]:border-primary/50 data-[state=on]:bg-primary/10 data-[state=on]:text-primary"
+          className="h-10 rounded-lg data-[state=on]:border-primary/50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground"
         >
           <ZapIcon className="fill-current" />
           Inference Available
@@ -94,7 +94,7 @@ export function ModelExplorer({ models }: { models: Model[] }) {
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="h-10 rounded-lg">
                 <ArrowUpDownIcon />
                 Sort: {sortLabel}
               </Button>

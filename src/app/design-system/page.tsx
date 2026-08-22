@@ -204,12 +204,38 @@ const roleColors = [
   },
 ];
 
-const chartColors = [1, 2, 3, 4, 5].map((n) => ({
-  name: `chart-${n}`,
-  varName: `--chart-${n}`,
-  bgClass: `bg-chart-${n}`,
-  textClass: 'text-white',
-}));
+const chartColors = [
+  {
+    name: 'chart-1',
+    varName: '--chart-1',
+    bgClass: 'bg-chart-1',
+    textClass: 'text-foreground',
+  },
+  {
+    name: 'chart-2',
+    varName: '--chart-2',
+    bgClass: 'bg-chart-2',
+    textClass: 'text-foreground',
+  },
+  {
+    name: 'chart-3',
+    varName: '--chart-3',
+    bgClass: 'bg-chart-3',
+    textClass: 'text-white',
+  },
+  {
+    name: 'chart-4',
+    varName: '--chart-4',
+    bgClass: 'bg-chart-4',
+    textClass: 'text-white',
+  },
+  {
+    name: 'chart-5',
+    varName: '--chart-5',
+    bgClass: 'bg-chart-5',
+    textClass: 'text-white',
+  },
+];
 
 const sidebarColors = [
   { name: 'sidebar', varName: '--sidebar', bgClass: 'bg-sidebar' },

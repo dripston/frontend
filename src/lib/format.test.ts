@@ -87,7 +87,7 @@ describe('avatarGradient', () => {
   });
 
   it('only uses palette colours', () => {
-    const palette = ['#fe7f2d', '#b16838', '#233d4d', '#3e6478', '#f7a571', '#905e3d'];
+    const palette = ['#2563eb', '#14185a', '#3f5ec2', '#6a7ccd', '#9ab0e5'];
     for (const name of [
       'Qwen',
       'unsloth',
