@@ -3,8 +3,8 @@ import type { NextConfig } from 'next';
 const isDev = process.env.NODE_ENV === 'development';
 
 const contentSecurityPolicy = [
-  `default-src 'self'`,
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  `default-src 'self' https://vercel.com https://vercel.live`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://vercel.com https://vercel.live`,
   `style-src 'self' 'unsafe-inline'`,
   `img-src 'self' blob: data:`,
   `font-src 'self' data:`,
@@ -12,7 +12,8 @@ const contentSecurityPolicy = [
   `base-uri 'self'`,
   `form-action 'self'`,
   `frame-ancestors 'none'`,
-  `connect-src 'self'${isDev ? ' ws: wss:' : ''}`,
+  `connect-src 'self'${isDev ? ' ws: wss:' : ''} https://vercel.com https://vercel.live`,
+  `manifest-src 'self' https://vercel.com`,
   `upgrade-insecure-requests`,
 ].join('; ');
 

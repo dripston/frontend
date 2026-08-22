@@ -57,9 +57,9 @@ export function ModelExplorer({ models }: { models: ModelSummary[] }) {
         if (inferenceOnly && !model.inference) return false;
         if (!needle) return true;
         return (
-          model.id.toLowerCase().includes(needle) ||
-          model.task.toLowerCase().includes(needle) ||
-          model.niche.toLowerCase().includes(needle)
+          (model.id?.toLowerCase() ?? '').includes(needle) ||
+          (model.task?.toLowerCase() ?? '').includes(needle) ||
+          (model.niche?.toLowerCase() ?? '').includes(needle)
         );
       })
       .toSorted(SORTERS[sort]);
