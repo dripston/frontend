@@ -112,7 +112,7 @@ export function CheckoutForm({
       const result = await purchaseModelAction(parsed.data);
 
       if (result.success) {
-        toast.success(`Payment complete — you now own ${modelName}`);
+        toast.success(`Payment complete — your hourly rental of ${modelName} is active`);
         router.replace(`/purchases/${result.receipt.reference}`);
         return;
       }

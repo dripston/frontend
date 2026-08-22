@@ -47,9 +47,11 @@ export function BuyModelCta({
 
   if (!signedIn) {
     return (
-      <Button nativeButton={false} render={<Link href="/login" />}>
-        <LockIcon />
-        Sign in to buy
+      <Button
+        nativeButton={false}
+        render={<Link href={`/login?redirect=/checkout/${modelId}`} />}
+      >
+        Sign in to rent
       </Button>
     );
   }
@@ -57,7 +59,7 @@ export function BuyModelCta({
   return (
     <Button nativeButton={false} render={<Link href={`/checkout/${modelId}`} />}>
       <LockIcon />
-      Buy for {formatMoney(quote.total, quote.currency)}
+      Rent for {formatMoney(quote.total, quote.currency)} / hr
     </Button>
   );
 }
