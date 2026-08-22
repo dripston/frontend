@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
 export const modelUploadSchema = z.object({
-  // ─────────────────────────────────────────────
-  // 1. Basic Information
-  // ─────────────────────────────────────────────
   basicInfo: z.object({
     name: z
       .string()
@@ -39,10 +36,6 @@ export const modelUploadSchema = z.object({
       .string()
       .regex(/^\d+\.\d+\.\d+$/, 'Version must follow semantic versioning (e.g. 1.0.0)'),
   }),
-
-  // ─────────────────────────────────────────────
-  // 2. Model Files
-  // ─────────────────────────────────────────────
   files: z.object({
     modelFiles: z
       .array(
@@ -67,10 +60,6 @@ export const modelUploadSchema = z.object({
 
     totalSize: z.number().positive('Model size must be greater than 0'),
   }),
-
-  // ─────────────────────────────────────────────
-  // 3. Technical Details
-  // ─────────────────────────────────────────────
   technical: z.object({
     framework: z.enum([
       'pytorch',
@@ -105,10 +94,6 @@ export const modelUploadSchema = z.object({
       .array(z.enum(['linux', 'windows', 'macos', 'docker', 'other']))
       .min(1),
   }),
-
-  // ─────────────────────────────────────────────
-  // 4. Training Information
-  // ─────────────────────────────────────────────
   training: z.object({
     baseModel: z.string().optional(),
 
@@ -138,10 +123,6 @@ export const modelUploadSchema = z.object({
 
     trainingTime: z.string().optional(),
   }),
-
-  // ─────────────────────────────────────────────
-  // 5. Evaluation
-  // ─────────────────────────────────────────────
   evaluation: z.object({
     benchmarks: z
       .array(
@@ -160,10 +141,6 @@ export const modelUploadSchema = z.object({
 
     evaluationNotes: z.string().max(5000).optional(),
   }),
-
-  // ─────────────────────────────────────────────
-  // 6. Usage
-  // ─────────────────────────────────────────────
   usage: z.object({
     installationInstructions: z.string().max(10000).optional(),
 
@@ -179,10 +156,6 @@ export const modelUploadSchema = z.object({
 
     frameworkVersion: z.string().optional(),
   }),
-
-  // ─────────────────────────────────────────────
-  // 7. License
-  // ─────────────────────────────────────────────
   license: z.object({
     modelLicense: z.string().min(1, 'Model license is required'),
 
@@ -200,10 +173,6 @@ export const modelUploadSchema = z.object({
       message: 'You must confirm that you have the right to distribute this model',
     }),
   }),
-
-  // ─────────────────────────────────────────────
-  // 8. Pricing
-  // ─────────────────────────────────────────────
   pricing: z.object({
     type: z.enum(['free', 'one-time', 'subscription', 'usage-based']),
 
@@ -213,10 +182,6 @@ export const modelUploadSchema = z.object({
 
     refundPolicy: z.string().optional(),
   }),
-
-  // ─────────────────────────────────────────────
-  // 9. Model Card
-  // ─────────────────────────────────────────────
   modelCard: z.object({
     overview: z.string().min(20),
 
@@ -231,3 +196,21 @@ export const modelUploadSchema = z.object({
     citation: z.string().optional(),
   }),
 });
+
+export type ModelUpload = z.infer<typeof modelUploadSchema>;
+export type ModelBasicInfo = ModelUpload['basicInfo'];
+export type ModelFilesInfo = ModelUpload['files'];
+export type ModelTechnical = ModelUpload['technical'];
+export type ModelTraining = ModelUpload['training'];
+export type ModelEvaluation = ModelUpload['evaluation'];
+export type ModelUsage = ModelUpload['usage'];
+export type ModelLicense = ModelUpload['license'];
+export type ModelPricing = ModelUpload['pricing'];
+export type ModelCardContent = ModelUpload['modelCard'];
+export type ModelCategory = ModelBasicInfo['category'];
+export type ModelFormat = ModelFilesInfo['modelFormat'];
+export type ModelFramework = ModelTechnical['framework'];
+export type ModelPrecision = ModelTechnical['precision'];
+export type ModelPlatform = ModelTechnical['supportedPlatforms'][number];
+export type ModelTrainingMethod = ModelTraining['trainingMethod'];
+export type ModelBenchmark = NonNullable<ModelEvaluation['benchmarks']>[number];

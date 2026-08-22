@@ -1,28 +1,104 @@
-export const MODEL_TASKS = [
-  'Text Generation',
-  'Image-Text-to-Text',
-  'Text-to-Audio',
-  'Image-to-Video',
-  'Image-Text-to-Video',
-] as const;
+import type {
+  ModelCategory,
+  ModelFormat,
+  ModelFramework,
+  ModelPrecision,
+  ModelPlatform,
+  ModelPricing,
+  ModelTrainingMethod,
+} from '@/zod-schema/upload-model-schema';
 
-export type ModelTask = (typeof MODEL_TASKS)[number];
+export const MODEL_CATEGORIES = [
+  'llm',
+  'multimodal',
+  'computer-vision',
+  'image-generation',
+  'audio',
+  'speech',
+  'embedding',
+  'classification',
+  'other',
+] as const satisfies readonly ModelCategory[];
 
-export const SORT_OPTIONS = [
-  { value: 'trending', label: 'Trending' },
-  { value: 'downloads', label: 'Most downloads' },
-  { value: 'likes', label: 'Most likes' },
-  { value: 'updated', label: 'Recently updated' },
-] as const;
+export const CATEGORY_LABELS: Record<ModelCategory, string> = {
+  llm: 'LLM',
+  multimodal: 'Multimodal',
+  'computer-vision': 'Computer vision',
+  'image-generation': 'Image generation',
+  audio: 'Audio',
+  speech: 'Speech',
+  embedding: 'Embedding',
+  classification: 'Classification',
+  other: 'Other',
+};
 
-export type SortOption = (typeof SORT_OPTIONS)[number]['value'];
+export const FORMAT_LABELS: Record<ModelFormat, string> = {
+  safetensors: 'Safetensors',
+  pytorch: 'PyTorch',
+  onnx: 'ONNX',
+  gguf: 'GGUF',
+  tensorflow: 'TensorFlow',
+  checkpoint: 'Checkpoint',
+  other: 'Other',
+};
 
-export type Model = {
+export const FRAMEWORK_LABELS: Record<ModelFramework, string> = {
+  pytorch: 'PyTorch',
+  tensorflow: 'TensorFlow',
+  jax: 'JAX',
+  transformers: 'Transformers',
+  diffusers: 'Diffusers',
+  onnx: 'ONNX Runtime',
+  timm: 'timm',
+  other: 'Other',
+};
+
+export const PRECISION_LABELS: Record<ModelPrecision, string> = {
+  fp32: 'FP32',
+  fp16: 'FP16',
+  bf16: 'BF16',
+  int8: 'INT8',
+  int4: 'INT4',
+  mixed: 'Mixed',
+  other: 'Other',
+};
+
+export const TRAINING_METHOD_LABELS: Record<ModelTrainingMethod, string> = {
+  pretraining: 'Pretraining',
+  'fine-tuning': 'Fine-tuning',
+  lora: 'LoRA',
+  qlora: 'QLoRA',
+  distillation: 'Distillation',
+  'reinforcement-learning': 'Reinforcement learning',
+  other: 'Other',
+};
+
+export const PRICING_TYPE_LABELS: Record<ModelPricing['type'], string> = {
+  free: 'Free',
+  'one-time': 'One-time',
+  subscription: 'Subscription',
+  'usage-based': 'Usage-based',
+};
+
+export const PLATFORM_LABELS: Record<ModelPlatform, string> = {
+  linux: 'Linux',
+  windows: 'Windows',
+  macos: 'macOS',
+  docker: 'Docker',
+  other: 'Other',
+};
+
+export type ModelSummary = {
   id: string;
   org: string;
   name: string;
-  task: ModelTask;
-  params: string | null;
+  task: string;
+  category: ModelCategory;
+  niche: string;
+  parameters: string;
+  format: ModelFormat;
+  license: string;
+  pricing: ModelPricing;
   updatedAt: string;
   downloads: number;
   likes: number;
@@ -30,201 +106,38 @@ export type Model = {
   base: boolean;
 };
 
-export const models: Model[] = [
-  {
-    id: 'mdl_7Kq2XvN4',
-    org: 'Qwen',
-    name: 'Qwen3.8-27B',
-    task: 'Image-Text-to-Text',
-    params: '28B',
-    updatedAt: '2026-08-15T09:12:00.000Z',
-    downloads: 1_730_000,
-    likes: 12_000,
-    inference: true,
-    base: true,
-  },
-  {
-    id: 'mdl_9Lp4RtY7',
-    org: 'unsloth',
-    name: 'Qwen3.8-27B-GGUF',
-    task: 'Text Generation',
-    params: '27B',
-    updatedAt: '2026-08-21T06:40:00.000Z',
-    downloads: 5_800_000,
-    likes: 2_510,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_3Hs8WdC1',
-    org: 'orcarouter',
-    name: 'Qwen3.8-27B-Uncensored-FP8',
-    task: 'Image-Text-to-Text',
-    params: '28B',
-    updatedAt: '2026-08-21T02:15:00.000Z',
-    downloads: 108_000,
-    likes: 823,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_5Nv1QzB6',
-    org: 'orcarouter',
-    name: 'Qwen3.8-27B-Uncensored-MLX',
-    task: 'Image-Text-to-Text',
-    params: '5B',
-    updatedAt: '2026-08-21T19:05:00.000Z',
-    downloads: 18_200,
-    likes: 821,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_2Bf6TgM9',
-    org: 'JonathanColetti',
-    name: 'Qwen3.8-27B-Uncensored-GGUF',
-    task: 'Text Generation',
-    params: '27B',
-    updatedAt: '2026-08-16T11:30:00.000Z',
-    downloads: 1_130_000,
-    likes: 571,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_8Rw3JkD2',
-    org: 'MiniMaxAI',
-    name: 'MiniMax-Music3',
-    task: 'Text-to-Audio',
-    params: '2B',
-    updatedAt: '2026-08-14T08:00:00.000Z',
-    downloads: 15_700,
-    likes: 1_160,
-    inference: false,
-    base: true,
-  },
-  {
-    id: 'mdl_4Cy7VhF5',
-    org: 'Lightricks',
-    name: 'LTX-2.5',
-    task: 'Image-to-Video',
-    params: null,
-    updatedAt: '2026-08-18T13:45:00.000Z',
-    downloads: 654_000,
-    likes: 1_490,
-    inference: false,
-    base: true,
-  },
-  {
-    id: 'mdl_6Dz9MnG3',
-    org: 'OBLITERATUS',
-    name: 'Qwen3.8-27B-OBLITERATED',
-    task: 'Text Generation',
-    params: '28B',
-    updatedAt: '2026-08-21T20:20:00.000Z',
-    downloads: 124_000,
-    likes: 444,
-    inference: true,
-    base: false,
-  },
-  {
-    id: 'mdl_1Ek5PqL8',
-    org: 'HauhauCS',
-    name: 'Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Preview',
-    task: 'Image-Text-to-Text',
-    params: '2B',
-    updatedAt: '2026-08-18T07:10:00.000Z',
-    downloads: 41_300,
-    likes: 218,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_0Gt2ZsA4',
-    org: 'Qwen',
-    name: 'Qwen3.8-27B-FP8',
-    task: 'Image-Text-to-Text',
-    params: '28B',
-    updatedAt: '2026-08-15T16:55:00.000Z',
-    downloads: 1_940_000,
-    likes: 660,
-    inference: false,
-    base: true,
-  },
-  {
-    id: 'mdl_5Jm8XcV1',
-    org: 'MiniMaxAI',
-    name: 'MiniMax-H3',
-    task: 'Image-Text-to-Video',
-    params: '33B',
-    updatedAt: '2026-08-13T10:25:00.000Z',
-    downloads: 3_610_000,
-    likes: 4_300,
-    inference: true,
-    base: true,
-  },
-  {
-    id: 'mdl_7Ap4NbR6',
-    org: 'ornith-ai',
-    name: 'Ornith-1.5-35B-A3B',
-    task: 'Text Generation',
-    params: '36B',
-    updatedAt: '2026-08-20T09:35:00.000Z',
-    downloads: 9_170,
-    likes: 291,
-    inference: false,
-    base: true,
-  },
-  {
-    id: 'mdl_3Uq6HdW9',
-    org: 'froggeric',
-    name: 'Qwen-Fixed-Chat-Templates',
-    task: 'Text Generation',
-    params: null,
-    updatedAt: '2026-08-21T17:00:00.000Z',
-    downloads: 5_420,
-    likes: 1_370,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_9Ix1KfT7',
-    org: 'empero-ai',
-    name: 'Qwen3.8-27B-Ridge-GGUF',
-    task: 'Image-Text-to-Text',
-    params: '27B',
-    updatedAt: '2026-08-16T14:05:00.000Z',
-    downloads: 74_000,
-    likes: 238,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_2Ov5LyE3',
-    org: 'orcarouter',
-    name: 'Qwen3.8-27B-Uncensored-GGUF',
-    task: 'Image-Text-to-Text',
-    params: '27B',
-    updatedAt: '2026-08-21T08:50:00.000Z',
-    downloads: 68_300,
-    likes: 295,
-    inference: false,
-    base: false,
-  },
-  {
-    id: 'mdl_8Ws3CpU5',
-    org: 'deepseek-ai',
-    name: 'DeepSeek-V4-Pro-0813',
-    task: 'Text Generation',
-    params: '1.7T',
-    updatedAt: '2026-08-14T18:30:00.000Z',
-    downloads: 49_600,
-    likes: 709,
-    inference: true,
-    base: true,
-  },
-];
+export const SORT_OPTIONS = [
+  { value: 'updated', label: 'Recently updated' },
+  { value: 'downloads', label: 'Most downloads' },
+  { value: 'likes', label: 'Most likes' },
+  { value: 'name', label: 'Name A–Z' },
+] as const;
 
-export function getModel(id: string): Model | undefined {
-  return models.find((model) => model.id === id);
+export type SortOption = (typeof SORT_OPTIONS)[number]['value'];
+
+export function priceLabel(pricing: ModelPricing): string {
+  if (pricing.type === 'free' || !pricing.price) return 'Free';
+
+  const amount = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: pricing.currency,
+    maximumFractionDigits: pricing.price < 1 ? 4 : 2,
+  }).format(pricing.price);
+
+  return `${amount} · ${PRICING_TYPE_LABELS[pricing.type].toLowerCase()}`;
+}
+
+const sizeFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 });
+
+export function dataSize(gigabytes: number): string {
+  if (gigabytes >= 1) return `${sizeFormatter.format(gigabytes)} GB`;
+  if (gigabytes >= 1 / 1024) return `${sizeFormatter.format(gigabytes * 1024)} MB`;
+  return `${sizeFormatter.format(Math.max(gigabytes * 1024 * 1024, 0.01))} KB`;
+}
+
+export function tokenCount(value: number): string {
+  if (value >= 1000) {
+    return `${new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value / 1000)}k tokens`;
+  }
+  return `${value} tokens`;
 }

@@ -1,11 +1,15 @@
 import {
   AudioLinesIcon,
+  BinaryIcon,
   BoxIcon,
   DownloadIcon,
-  FileTextIcon,
+  EyeIcon,
   HeartIcon,
   ImageIcon,
-  VideoIcon,
+  LayersIcon,
+  MessageSquareIcon,
+  MicIcon,
+  TagsIcon,
   ZapIcon,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -15,30 +19,37 @@ import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { avatarGradient, compactNumber, initials, relativeTime } from '@/lib/format';
-import type { Model, ModelTask } from '@/lib/models';
+import { FORMAT_LABELS, priceLabel, type ModelSummary } from '@/lib/models';
+import type { ModelCategory } from '@/zod-schema/upload-model-schema';
 import { cn } from '@/lib/utils';
 
-const TASK_ICONS: Record<ModelTask, ComponentType<{ className?: string }>> = {
-  'Text Generation': FileTextIcon,
-  'Image-Text-to-Text': ImageIcon,
-  'Text-to-Audio': AudioLinesIcon,
-  'Image-to-Video': VideoIcon,
-  'Image-Text-to-Video': VideoIcon,
+export const CATEGORY_ICONS: Record<
+  ModelCategory,
+  ComponentType<{ className?: string }>
+> = {
+  llm: MessageSquareIcon,
+  multimodal: LayersIcon,
+  'computer-vision': EyeIcon,
+  'image-generation': ImageIcon,
+  audio: AudioLinesIcon,
+  speech: MicIcon,
+  embedding: BinaryIcon,
+  classification: TagsIcon,
+  other: BoxIcon,
 };
 
 function Meta({ children }: { children: React.ReactNode }) {
   return <span className="flex items-center gap-1 whitespace-nowrap">{children}</span>;
 }
 
-export function ModelCard({ model }: { model: Model }) {
-  const TaskIcon = TASK_ICONS[model.task];
+export function ModelCard({ model }: { model: ModelSummary }) {
+  const CategoryIcon = CATEGORY_ICONS[model.category];
   const [from, to] = avatarGradient(model.org);
-  const fullName = `${model.org}/${model.name}`;
 
   return (
     <Card
       className={cn(
-        'group relative gap-0 rounded-xl border-border bg-card p-5 shadow-sm transition-all',
+        'group relative h-full gap-0 rounded-xl border-border bg-card p-5 shadow-sm transition-all',
         'text-card-foreground focus-within:border-primary/60 hover:border-primary/40 hover:shadow-md',
       )}
     >
@@ -46,9 +57,7 @@ export function ModelCard({ model }: { model: Model }) {
         <span
           aria-hidden="true"
           className="grid size-6 shrink-0 place-items-center rounded-md text-[0.6rem] font-semibold text-white"
-          style={{
-            backgroundImage: `linear-gradient(140deg, ${from}, ${to})`,
-          }}
+          style={{ backgroundImage: `linear-gradient(140deg, ${from}, ${to})` }}
         >
           {initials(model.org)}
         </span>
@@ -68,26 +77,22 @@ export function ModelCard({ model }: { model: Model }) {
                 </Link>
               }
             />
-            <TooltipContent className="font-mono">{fullName}</TooltipContent>
+            <TooltipContent className="font-mono">{model.id}</TooltipContent>
           </Tooltip>
         </h3>
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
         <Meta>
-          <TaskIcon className="size-3.5" />
-          {model.task}
+          <CategoryIcon className="size-3.5 shrink-0" />
+          <span className="truncate">{model.task}</span>
         </Meta>
 
-        {model.params ? (
-          <>
-            <span aria-hidden="true">•</span>
-            <Meta>
-              <BoxIcon className="size-3.5" />
-              {model.params}
-            </Meta>
-          </>
-        ) : null}
+        <span aria-hidden="true">•</span>
+        <Meta>
+          <BoxIcon className="size-3.5" />
+          {model.parameters}
+        </Meta>
 
         <span aria-hidden="true">•</span>
         <Meta>
@@ -102,6 +107,12 @@ export function ModelCard({ model }: { model: Model }) {
           {compactNumber(model.downloads)}
         </Meta>
 
+        <span aria-hidden="true">•</span>
+        <Meta>
+          <HeartIcon className="size-3.5" />
+          {compactNumber(model.likes)}
+        </Meta>
+
         {model.inference ? (
           <>
             <span aria-hidden="true">•</span>
@@ -110,28 +121,28 @@ export function ModelCard({ model }: { model: Model }) {
                 render={
                   <span className="flex items-center text-primary">
                     <ZapIcon className="size-3.5 fill-current" />
-                    <span className="sr-only">Inference available</span>
+                    <span className="sr-only">Inference endpoint available</span>
                   </span>
                 }
               />
-              <TooltipContent>Inference available</TooltipContent>
+              <TooltipContent>Inference endpoint available</TooltipContent>
             </Tooltip>
           </>
         ) : null}
-
-        <span aria-hidden="true">•</span>
-        <Meta>
-          <HeartIcon className="size-3.5" />
-          {compactNumber(model.likes)}
-        </Meta>
       </div>
 
-      <div className="mt-3.5 flex items-center gap-2">
+      <div className="mt-3.5 flex flex-wrap items-center gap-2">
         <Badge
           variant="secondary"
-          className="rounded-md bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium tracking-wide text-secondary-foreground hover:bg-secondary/80"
+          className="rounded-md bg-secondary px-2 py-0.5 font-mono text-[11px] font-medium tracking-wide text-secondary-foreground"
         >
-          {model.id}
+          {FORMAT_LABELS[model.format]}
+        </Badge>
+        <Badge
+          variant="outline"
+          className="rounded-md border border-border bg-transparent px-2 py-0.5 font-mono text-[11px] font-medium tracking-wide text-foreground"
+        >
+          {priceLabel(model.pricing)}
         </Badge>
         {model.base ? (
           <Badge
