@@ -283,7 +283,7 @@ export default function DesignSystemPage() {
     <div className="min-h-screen bg-background font-sans text-foreground">
       {/* top bar */}
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
+        <div className="flex h-16 items-center justify-between px-4">
           <span className="text-sm font-semibold tracking-tight">Design system</span>
           <nav className="hidden items-center gap-5 md:flex">
             {navItems.map(([id, label]) => (
@@ -299,7 +299,7 @@ export default function DesignSystemPage() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-5xl px-6 pt-12 pb-6">
+      <div className="px-4 pt-12 pb-6">
         <p className="mb-3 font-mono text-[11px] tracking-[0.15em] text-muted-foreground uppercase">
           Reference — reads live from globals.css
         </p>
@@ -311,7 +311,7 @@ export default function DesignSystemPage() {
         </p>
       </div>
 
-      <main className="mx-auto max-w-5xl px-6">
+      <main className="px-4">
         {/* COLORS */}
         <Section id="colors" kicker="01" title="Base & role colors">
           <p className="mb-3 font-mono text-xs tracking-wide text-muted-foreground uppercase">
@@ -500,7 +500,7 @@ export default function DesignSystemPage() {
         </Section>
       </main>
 
-      <footer className="mx-auto max-w-5xl px-6 py-10">
+      <footer className="px-4 py-10">
         <p className="font-mono text-[11px] text-muted-foreground">
           Design system — reads from globals.css
         </p>

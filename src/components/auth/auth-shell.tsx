@@ -21,7 +21,7 @@ export function AuthShell({
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-5xl items-center px-6">
+        <div className="flex h-16 items-center px-4">
           <Link
             href="/"
             className="flex items-center gap-2 text-sm font-semibold tracking-tight"
@@ -35,7 +35,7 @@ export function AuthShell({
         </div>
       </header>
 
-      <main className="flex flex-1 items-center justify-center px-6 py-12">
+      <main className="flex flex-1 items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="rounded-xl border border-border bg-card p-6 shadow-2xs sm:p-8">
             <Kicker className="mb-2">{kicker}</Kicker>

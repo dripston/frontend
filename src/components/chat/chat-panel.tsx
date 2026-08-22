@@ -107,7 +107,7 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
   const empty = messages.length === 0;
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-3xl flex-col px-4">
+    <div className="flex h-dvh w-full flex-col px-4">
       <header className="flex items-center gap-3 py-4">
         <Button
           variant="ghost"
