@@ -32,6 +32,7 @@ export function toSummary(record: ModelRecord): ModelSummary {
     likes: record.likes,
     inference: Boolean(record.endpointUrl),
     base: record.training.trainingMethod === 'pretraining',
+    verified: record.isVerified,
   };
 }
 

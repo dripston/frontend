@@ -1,4 +1,5 @@
 import {
+  BadgeCheckIcon,
   DownloadIcon,
   ExternalLinkIcon,
   FileIcon,
@@ -323,6 +324,15 @@ export default async function ModelPage({ params }: PageProps<'/models/[...id]'>
             >
               v{record.version}
             </Badge>
+            {record.isVerified ? (
+              <Badge
+                className="rounded-md bg-primary/10 text-primary"
+                variant="secondary"
+              >
+                <BadgeCheckIcon className="size-3.5" />
+                Verified
+              </Badge>
+            ) : null}
 
             <div className="ml-auto flex items-center gap-2">
               <Badge variant="outline" className="h-8 rounded-md px-3 font-normal">

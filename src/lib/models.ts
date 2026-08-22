@@ -104,6 +104,7 @@ export type ModelSummary = {
   likes: number;
   inference: boolean;
   base: boolean;
+  verified: boolean;
 };
 
 export const SORT_OPTIONS = [

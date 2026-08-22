@@ -15,6 +15,7 @@ const serverSchema = z.object({
   QSTASH_CURRENT_SIGNING_KEY: z.string(),
   QSTASH_NEXT_SIGNING_KEY: z.string(),
   QSTASH_TOKEN: z.string(),
+  BENCHMARK_API_URL: z.url().default('http://127.0.0.1:8000'),
 });
 
 const clientSchema = z.object({
@@ -37,6 +38,7 @@ const processEnv = {
   QSTASH_TOKEN: process.env.QSTASH_TOKEN,
   QSTASH_CURRENT_SIGNING_KEY: process.env.QSTASH_CURRENT_SIGNING_KEY,
   QSTASH_NEXT_SIGNING_KEY: process.env.QSTASH_NEXT_SIGNING_KEY,
+  BENCHMARK_API_URL: process.env.BENCHMARK_API_URL,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
 } as const;

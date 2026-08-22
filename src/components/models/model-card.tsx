@@ -1,5 +1,6 @@
 import {
   AudioLinesIcon,
+  BadgeCheckIcon,
   BinaryIcon,
   BoxIcon,
   DownloadIcon,
@@ -80,6 +81,20 @@ export function ModelCard({ model }: { model: ModelSummary }) {
             <TooltipContent className="font-mono">{model.id}</TooltipContent>
           </Tooltip>
         </h3>
+
+        {model.verified ? (
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <span className="flex shrink-0 items-center text-primary">
+                  <BadgeCheckIcon className="size-4" />
+                  <span className="sr-only">Verified by benchmark</span>
+                </span>
+              }
+            />
+            <TooltipContent>Verified by benchmark</TooltipContent>
+          </Tooltip>
+        ) : null}
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">

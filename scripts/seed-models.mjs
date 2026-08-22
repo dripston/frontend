@@ -20,6 +20,7 @@ const models = [
     endpointUrl: 'https://api.aegislabs.dev/v1/aegis-legal-8b/chat',
     downloads: 128400,
     likes: 1840,
+    isVerified: true,
     description:
       'Instruction-tuned 8B model for contract review, clause classification and litigation summarisation. Trained on public court filings and openly licensed contract corpora, with a retrieval-friendly 128k context window.',
     tags: ['legal', 'contracts', 'summarisation', 'rag', 'english'],
@@ -146,6 +147,7 @@ const models = [
     endpointUrl: 'https://inference.clario.ai/v1/clario-support-3b',
     downloads: 54200,
     likes: 612,
+    isVerified: false,
     description:
       'Small, quantised support agent tuned for ticket triage, refund policy reasoning and multi-turn deflection. Runs on a single consumer GPU or CPU with 8 GB of RAM.',
     tags: ['support', 'ticketing', 'gguf', 'on-prem', 'quantised'],
@@ -256,6 +258,7 @@ const models = [
     endpointUrl: 'https://api.vitalscan.health/v1/ct-triage/predict',
     downloads: 8900,
     likes: 274,
+    isVerified: false,
     description:
       'Chest CT triage classifier that flags studies with suspected pulmonary embolism, pneumothorax or pleural effusion so radiology worklists can be reordered by urgency.',
     tags: ['medical-imaging', 'ct', 'triage', 'onnx', 'radiology'],
@@ -383,6 +386,7 @@ const models = [
     endpointUrl: 'https://api.finembed.io/v2/embed',
     downloads: 412000,
     likes: 3110,
+    isVerified: true,
     description:
       'Text embedding model tuned on filings, earnings calls and analyst notes. Produces 768-dimension vectors that separate financial entities, sentiment and instrument types far better than general-purpose encoders.',
     tags: ['embeddings', 'finance', 'retrieval', 'rag', 'sentence-transformers'],
@@ -491,6 +495,7 @@ const models = [
     endpointUrl: 'https://api.echoscribe.dev/v1/transcribe',
     downloads: 76500,
     likes: 1490,
+    isVerified: false,
     description:
       'Streaming speech-to-text model with word-level timestamps and speaker turns. Tuned for meeting audio, call-centre recordings and podcasts across 12 languages.',
     tags: ['asr', 'speech-to-text', 'streaming', 'diarisation', 'multilingual'],
@@ -635,12 +640,12 @@ for (const [index, entry] of models.entries()) {
 
   await sql`
     insert into model (
-      id, user_id, name, niche, category, task, version, endpoint_url, downloads, likes,
+      id, user_id, name, niche, category, task, version, endpoint_url, downloads, likes, is_verified,
       basic_info, files, technical, training, evaluation, usage, license, pricing, model_card,
       created_at, updated_at
     ) values (
       ${id}, ${owner.id}, ${entry.name}, ${entry.niche}, ${entry.category}, ${entry.task},
-      ${entry.version}, ${entry.endpointUrl}, ${entry.downloads}, ${entry.likes},
+      ${entry.version}, ${entry.endpointUrl}, ${entry.downloads}, ${entry.likes}, ${entry.isVerified},
       ${JSON.stringify(basicInfo)}, ${JSON.stringify(entry.files)}, ${JSON.stringify(entry.technical)},
       ${JSON.stringify(entry.training)}, ${JSON.stringify(entry.evaluation)}, ${JSON.stringify(entry.usage)},
       ${JSON.stringify(entry.license)}, ${JSON.stringify(entry.pricing)}, ${JSON.stringify(entry.modelCard)},
@@ -649,7 +654,8 @@ for (const [index, entry] of models.entries()) {
     on conflict (id) do update set
       name = excluded.name, niche = excluded.niche, category = excluded.category,
       task = excluded.task, version = excluded.version, endpoint_url = excluded.endpoint_url,
-      downloads = excluded.downloads, likes = excluded.likes, basic_info = excluded.basic_info,
+      downloads = excluded.downloads, likes = excluded.likes, is_verified = excluded.is_verified,
+      basic_info = excluded.basic_info,
       files = excluded.files, technical = excluded.technical, training = excluded.training,
       evaluation = excluded.evaluation, usage = excluded.usage, license = excluded.license,
       pricing = excluded.pricing, model_card = excluded.model_card, updated_at = excluded.updated_at

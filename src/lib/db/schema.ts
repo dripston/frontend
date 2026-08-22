@@ -94,6 +94,7 @@ export const model = pgTable('model', {
   endpointUrl: text('endpoint_url').notNull(),
   downloads: integer('downloads').notNull().default(0),
   likes: integer('likes').notNull().default(0),
+  isVerified: boolean('is_verified').notNull().default(false),
   basicInfo: jsonb('basic_info').$type<ModelBasicInfo>().notNull(),
   files: jsonb('files').$type<ModelFilesInfo>().notNull(),
   technical: jsonb('technical').$type<ModelTechnical>().notNull(),
