@@ -1,6 +1,7 @@
 import {
   CpuIcon,
   GraduationCapIcon,
+  LockIcon,
   ScaleIcon,
   TagsIcon,
   TerminalIcon,
@@ -83,7 +84,13 @@ function BadgeList({ items }: { items: string[] }) {
   );
 }
 
-export function ModelDetailSidebar({ record }: { record: ModelRecord }) {
+export function ModelDetailSidebar({
+  record,
+  unlocked,
+}: {
+  record: ModelRecord;
+  unlocked: boolean;
+}) {
   const { technical, training, license, pricing, basicInfo, files } = record;
 
   const technicalRows = rowsOf([
@@ -140,14 +147,21 @@ export function ModelDetailSidebar({ record }: { record: ModelRecord }) {
   return (
     <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
       <Section icon={TerminalIcon} title="Inference endpoint">
-        <a
-          href={basicInfo.endpoint_url}
-          rel="noreferrer noopener"
-          target="_blank"
-          className="block rounded-lg border border-border bg-muted/40 px-3 py-2 font-mono text-[0.75rem] break-all text-foreground transition-colors hover:border-primary/40"
-        >
-          {basicInfo.endpoint_url}
-        </a>
+        {unlocked ? (
+          <a
+            href={basicInfo.endpoint_url}
+            rel="noreferrer noopener"
+            target="_blank"
+            className="block rounded-lg border border-border bg-muted/40 px-3 py-2 font-mono text-[0.75rem] break-all text-foreground transition-colors hover:border-primary/40"
+          >
+            {basicInfo.endpoint_url}
+          </a>
+        ) : (
+          <p className="flex items-center gap-2 rounded-lg border border-dashed border-border px-3 py-2 text-[0.75rem] text-muted-foreground">
+            <LockIcon className="size-3.5 shrink-0" />
+            Buy this model to reveal its endpoint
+          </p>
+        )}
         <Definitions
           rows={rowsOf([
             ['Pricing', priceLabel(pricing)],

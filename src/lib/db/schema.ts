@@ -1,4 +1,14 @@
-import { boolean, integer, pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+  timestamp,
+  jsonb,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
+
+import type { CardBrand, Currency, PricingType, PurchaseStatus } from '../payments';
 
 import type {
   ModelBasicInfo,
@@ -112,4 +122,33 @@ export const model = pgTable('model', {
     .notNull(),
 });
 
-export const schema = { user, session, account, verification, model };
+export const purchase = pgTable(
+  'purchase',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    modelId: text('model_id')
+      .notNull()
+      .references(() => model.id, { onDelete: 'cascade' }),
+    status: text('status').$type<PurchaseStatus>().notNull().default('paid'),
+    pricingType: text('pricing_type').$type<PricingType>().notNull(),
+    subtotal: integer('subtotal').notNull(),
+    platformFee: integer('platform_fee').notNull().default(0),
+    amount: integer('amount').notNull(),
+    currency: text('currency').$type<Currency>().notNull(),
+    cardBrand: text('card_brand').$type<CardBrand>().notNull(),
+    cardLast4: text('card_last4').notNull(),
+    licenseKey: text('license_key').notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  },
+  (table) => [uniqueIndex('purchase_user_model_idx').on(table.userId, table.modelId)],
+);
+
+export const schema = { user, session, account, verification, model, purchase };

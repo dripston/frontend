@@ -43,6 +43,13 @@
       "when": 1787386488674,
       "tag": "0005_opposite_hammerhead",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787391446668,
+      "tag": "0006_breezy_hercules",
+      "breakpoints": true
     }
   ]
 }

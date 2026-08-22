@@ -7,17 +7,22 @@ import {
   HeartIcon,
 } from 'lucide-react';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { RichText } from '@/components/chat/rich-text';
+import { BuyModelDialog } from '@/components/models/buy-model-dialog';
 import { ModelDetailSidebar } from '@/components/models/model-detail-sidebar';
 import { ModelTabs, type ModelTab } from '@/components/models/model-tabs';
 import { SiteHeader } from '@/components/site-header';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { auth } from '@/lib/auth';
 import { avatarGradient, compactNumber, initials, relativeTime } from '@/lib/format';
 import { getModelRecord, organisationOf, type ModelRecord } from '@/lib/model-repository';
+import { isPayable } from '@/lib/payments';
+import { getPurchase } from '@/lib/purchase-repository';
 import {
   CATEGORY_LABELS,
   FORMAT_LABELS,
@@ -248,6 +253,12 @@ export default async function ModelPage({ params }: PageProps<'/models/[...id]'>
   const record = await recordFor(params);
   if (!record) notFound();
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const viewer = session?.user ?? null;
+  const purchase = viewer ? await getPurchase(viewer.id, record.id) : null;
+  const isSeller = viewer?.id === record.userId;
+  const unlocked = !isPayable(record.pricing) || isSeller || Boolean(purchase);
+
   const org = organisationOf(record.id);
   const [from, to] = avatarGradient(org);
   const updatedAt = record.updatedAt.toISOString();
@@ -338,19 +349,32 @@ export default async function ModelPage({ params }: PageProps<'/models/[...id]'>
               <Badge variant="outline" className="h-8 rounded-md px-3 font-normal">
                 {priceLabel(record.pricing)}
               </Badge>
-              <Button
-                nativeButton={false}
-                render={
-                  <a
-                    href={record.basicInfo.endpoint_url}
-                    rel="noreferrer noopener"
-                    target="_blank"
-                  >
-                    <ExternalLinkIcon />
-                    Open endpoint
-                  </a>
-                }
+              <BuyModelDialog
+                modelId={record.id}
+                modelName={record.name}
+                pricing={record.pricing}
+                signedIn={Boolean(viewer)}
+                isSeller={isSeller}
+                owned={Boolean(purchase)}
+                buyerName={viewer?.name}
+                buyerEmail={viewer?.email}
               />
+              {unlocked ? (
+                <Button
+                  variant={isPayable(record.pricing) ? 'outline' : 'default'}
+                  nativeButton={false}
+                  render={
+                    <a
+                      href={record.basicInfo.endpoint_url}
+                      rel="noreferrer noopener"
+                      target="_blank"
+                    >
+                      <ExternalLinkIcon />
+                      Open endpoint
+                    </a>
+                  }
+                />
+              ) : null}
             </div>
           </div>
 
@@ -397,7 +421,7 @@ export default async function ModelPage({ params }: PageProps<'/models/[...id]'>
 
         <div className="mt-8 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
           <ModelTabs tabs={tabs} />
-          <ModelDetailSidebar record={record} />
+          <ModelDetailSidebar record={record} unlocked={unlocked} />
         </div>
       </main>
     </>

@@ -8,6 +8,7 @@ import { siteConfig } from '@/lib/site-config';
 const NAV = [
   { href: '/', label: 'Models' },
   { href: '/chat', label: 'Assistant' },
+  { href: '/purchases', label: 'Purchases' },
 ] as const;
 
 export function SiteHeader() {
