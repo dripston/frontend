@@ -23,7 +23,7 @@ const clientSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string().min(1).default('Hackathon'),
 });
 
-const processEnv = {
+const rawEnv = {
   NODE_ENV: process.env.NODE_ENV,
   LOG_LEVEL: process.env.LOG_LEVEL,
   DATABASE_URL: process.env.DATABASE_URL,
@@ -43,6 +43,10 @@ const processEnv = {
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
 } as const;
 
+const processEnv = Object.fromEntries(
+  Object.entries(rawEnv).filter(([, value]) => value !== undefined && value !== ''),
+);
+
 type ServerEnv = z.infer<typeof serverSchema>;
 type ClientEnv = z.infer<typeof clientSchema>;
 type Env = ServerEnv & ClientEnv;
@@ -51,12 +55,21 @@ const isServer = typeof window === 'undefined';
 
 const skipValidation = Boolean(process.env.SKIP_ENV_VALIDATION);
 
+const schema = isServer ? serverSchema.extend(clientSchema.shape) : clientSchema;
+
+const envDefaults = z
+  .object(
+    Object.fromEntries(
+      Object.entries(schema.shape).filter(([, field]) => field instanceof z.ZodDefault),
+    ),
+  )
+  .parse({});
+
 function parseEnv(): Env {
   if (skipValidation) {
-    return processEnv as unknown as Env;
+    return { ...envDefaults, ...processEnv } as unknown as Env;
   }
 
-  const schema = isServer ? serverSchema.extend(clientSchema.shape) : clientSchema;
   const parsed = schema.safeParse(processEnv);
 
   if (!parsed.success) {
