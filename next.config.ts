@@ -38,7 +38,6 @@ const nextConfig: NextConfig = {
 
   allowedDevOrigins: ['*.ngrok-free.app', '*.ngrok.io', '*.trycloudflare.com'],
   poweredByHeader: false,
-  output: process.env.CF_PAGES ? undefined : 'standalone',
   typedRoutes: true,
   serverExternalPackages: ['pino', 'pino-pretty'],
 
