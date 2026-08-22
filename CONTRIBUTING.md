@@ -13,7 +13,7 @@ pnpm run dev
 
 1. Branch from `main`: `git checkout -b feat/short-description`
 2. Make the change, with tests.
-3. Run `pnpm run validate` — this is exactly what CI checks.
+3. Run `pnpm run validate` — format, lint, typecheck and unit tests in one pass.
 4. Commit using [Conventional Commits](https://www.conventionalcommits.org).
 5. Open a PR and fill in the template.
 

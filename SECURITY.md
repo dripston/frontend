@@ -15,16 +15,15 @@ Only the latest release on `main` receives security fixes.
 
 ## Built-in protections
 
-| Control                                                      | Where                          |
-| ------------------------------------------------------------ | ------------------------------ |
-| Content-Security-Policy                                      | `next.config.ts`               |
-| HSTS, `nosniff`, `frame-ancestors`, COOP, Permissions-Policy | `next.config.ts`               |
-| Environment validation                                       | `src/env.ts`                   |
-| Server/client secret isolation                               | `src/env.ts` Proxy guard       |
-| Credential redaction in logs                                 | `src/lib/logger.ts`            |
-| Static analysis                                              | `.github/workflows/codeql.yml` |
-| Dependency updates                                           | `.github/dependabot.yml`       |
-| Non-root container                                           | `Dockerfile`                   |
+| Control                                                      | Where                    |
+| ------------------------------------------------------------ | ------------------------ |
+| Content-Security-Policy                                      | `next.config.ts`         |
+| HSTS, `nosniff`, `frame-ancestors`, COOP, Permissions-Policy | `next.config.ts`         |
+| Environment validation                                       | `src/env.ts`             |
+| Server/client secret isolation                               | `src/env.ts` Proxy guard |
+| Credential redaction in logs                                 | `src/lib/logger.ts`      |
+| Dependency updates                                           | `.github/dependabot.yml` |
+| Non-root container                                           | `Dockerfile`             |
 
 ## Expectations for contributors
 
