@@ -144,15 +144,14 @@ export function SignupForm() {
           ) : null}
         </div>
 
-        <Button 
-          type="submit" 
-          size="lg" 
-          className="w-full relative group overflow-hidden mt-6" 
+        <Button
+          type="submit"
+          size="lg"
+          className="group relative mt-6 w-full overflow-hidden"
           disabled={pending}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-100 transition-opacity group-hover:opacity-90" />
-          <span className="relative flex items-center justify-center gap-2 text-white font-medium">
-            {pending ? <Loader2Icon className="animate-spin size-4" /> : null}
+          <span className="relative flex items-center justify-center gap-2 font-medium text-white">
+            {pending ? <Loader2Icon className="size-4 animate-spin" /> : null}
             Create account
           </span>
         </Button>

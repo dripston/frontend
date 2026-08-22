@@ -6,6 +6,8 @@ import { db } from '@/lib/db';
 import { model } from '@/lib/db/schema';
 import { auth } from '@/lib/auth';
 import { modelUploadSchema } from '@/zod-schema/upload-model-schema';
+import { qstashClient } from '@/lib/db/queue';
+import { env } from '@/env';
 
 export async function uploadModelAction(data: z.infer<typeof modelUploadSchema>) {
   const session = await auth.api.getSession({
@@ -36,21 +38,33 @@ export async function uploadModelAction(data: z.infer<typeof modelUploadSchema>)
       .replace(/[^a-z0-9]+/g, '-');
     const customId = `${ownerName}/${modelName}`;
 
-    await db.insert(model).values({
-      id: customId,
-      userId: session.user.id,
-      name: parsed.data.basicInfo.name,
-      niche: parsed.data.basicInfo.declared_niche,
-      category: parsed.data.basicInfo.category,
-      basicInfo: parsed.data.basicInfo,
-      files: parsed.data.files,
-      technical: parsed.data.technical,
-      training: parsed.data.training,
-      evaluation: parsed.data.evaluation,
-      usage: parsed.data.usage,
-      license: parsed.data.license,
-      pricing: parsed.data.pricing,
-      modelCard: parsed.data.modelCard,
+    await db.transaction(async (tx) => {
+      await tx.insert(model).values({
+        id: customId,
+        userId: session.user.id,
+        name: parsed.data.basicInfo.name,
+        niche: parsed.data.basicInfo.declared_niche,
+        category: parsed.data.basicInfo.category,
+        basicInfo: parsed.data.basicInfo,
+        files: parsed.data.files,
+        technical: parsed.data.technical,
+        training: parsed.data.training,
+        evaluation: parsed.data.evaluation,
+        usage: parsed.data.usage,
+        license: parsed.data.license,
+        pricing: parsed.data.pricing,
+        modelCard: parsed.data.modelCard,
+      });
+
+      await qstashClient.publishJSON({
+        url: `${env.NEXT_PUBLIC_APP_URL}/api/jobs/process-model`,
+        body: {
+          modelId: customId,
+          userId: session.user.id,
+          name: parsed.data.basicInfo.name,
+          niche: parsed.data.basicInfo.declared_niche,
+        },
+      });
     });
   } catch (error) {
     console.error('Failed to insert model:', error);
