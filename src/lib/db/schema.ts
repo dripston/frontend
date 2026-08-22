@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp, jsonb } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -66,7 +66,7 @@ export const verification = pgTable('verification', {
 });
 
 export const model = pgTable('model', {
-  id: uuid('id').defaultRandom().primaryKey(),
+  id: text('id').primaryKey(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),

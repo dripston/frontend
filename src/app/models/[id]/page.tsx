@@ -86,11 +86,11 @@ export default async function ModelPage({ params }: PageProps<'/models/[id]'>) {
             </span>
 
             <div className="ml-auto flex gap-2">
-              <Button variant="outline" size="sm">
+              <Button variant="outline">
                 <TerminalIcon />
                 Use this model
               </Button>
-              <Button size="sm">
+              <Button>
                 <RocketIcon />
                 Deploy
               </Button>

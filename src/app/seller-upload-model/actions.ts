@@ -30,7 +30,14 @@ export async function uploadModelAction(data: z.infer<typeof modelUploadSchema>)
   }
 
   try {
+    const ownerName = session.user.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const modelName = parsed.data.basicInfo.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-');
+    const customId = `${ownerName}/${modelName}`;
+
     await db.insert(model).values({
+      id: customId,
       userId: session.user.id,
       name: parsed.data.basicInfo.name,
       niche: parsed.data.basicInfo.declared_niche,
