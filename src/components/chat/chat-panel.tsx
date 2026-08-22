@@ -57,39 +57,65 @@ export function ChatPanel({ streamMs = 500 }: { streamMs?: number }) {
   }, [messages, streaming]);
 
   const send = useCallback(
-    (prompt: string) => {
+    async (prompt: string) => {
       const trimmed = prompt.trim();
       if (!trimmed || streaming) return;
 
       const stamp = Date.now();
-      const answer = replyTo(trimmed);
 
       setDraft('');
       setStreaming(true);
+      
+      // Update UI with user message immediately
       setMessages((current) => [
         ...current,
         { id: `u-${stamp}`, role: 'user', content: trimmed },
         { id: `a-${stamp}`, role: 'assistant', content: '' },
       ]);
 
-      const step = Math.max(1, Math.ceil(answer.length / STREAM_STEPS));
-      for (let index = 1; index <= STREAM_STEPS; index += 1) {
-        const timer = setTimeout(
-          () => {
-            const slice = answer.slice(0, index * step);
-            setMessages((current) =>
-              current.map((message) =>
-                message.id === `a-${stamp}` ? { ...message, content: slice } : message,
-              ),
-            );
-            if (index === STREAM_STEPS) setStreaming(false);
-          },
-          (streamMs / STREAM_STEPS) * index,
+      try {
+        const history = messages.map(({ role, content }) => ({ role, content }));
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: trimmed, history }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to get response');
+        }
+
+        const data = await response.json();
+        const answer = data.reply || 'Sorry, I could not generate a response.';
+
+        // Simulate streaming for the response
+        const step = Math.max(1, Math.ceil(answer.length / STREAM_STEPS));
+        for (let index = 1; index <= STREAM_STEPS; index += 1) {
+          const timer = setTimeout(
+            () => {
+              const slice = answer.slice(0, index * step);
+              setMessages((current) =>
+                current.map((message) =>
+                  message.id === `a-${stamp}` ? { ...message, content: slice } : message,
+                ),
+              );
+              if (index === STREAM_STEPS) setStreaming(false);
+            },
+            (streamMs / STREAM_STEPS) * index,
+          );
+          timers.current.push(timer);
+        }
+      } catch (error) {
+        console.error('Chat error:', error);
+        setMessages((current) =>
+          current.map((message) =>
+            message.id === `a-${stamp}` ? { ...message, content: 'An error occurred while fetching the response.' } : message,
+          ),
         );
-        timers.current.push(timer);
+        setStreaming(false);
       }
     },
-    [streaming, streamMs],
+    [streaming, streamMs, messages],
   );
 
   const stop = useCallback(() => {
