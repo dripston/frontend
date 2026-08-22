@@ -144,9 +144,17 @@ export function SignupForm() {
           ) : null}
         </div>
 
-        <Button type="submit" className="mt-4 w-full" disabled={pending}>
-          {pending ? <Loader2Icon className="mr-2 size-4 animate-spin" /> : null}
-          Create account
+        <Button
+          type="submit"
+          size="lg"
+          className="group relative mt-6 w-full overflow-hidden"
+          disabled={pending}
+          isLoading={pending}
+        >
+          <span className="relative flex items-center justify-center gap-2 font-medium text-white">
+            {pending ? <Loader2Icon className="size-4 animate-spin" /> : null}
+            Create account
+          </span>
         </Button>
 
         {formError ? (

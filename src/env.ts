@@ -11,6 +11,10 @@ const serverSchema = z.object({
   GITHUB_CLIENT_SECRET: z.string().optional(),
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
+  QSTASH_URL: z.url(),
+  QSTASH_CURRENT_SIGNING_KEY: z.string(),
+  QSTASH_NEXT_SIGNING_KEY: z.string(),
+  QSTASH_TOKEN: z.string(),
 });
 
 const clientSchema = z.object({
@@ -29,6 +33,10 @@ const processEnv = {
   GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+  QSTASH_URL: process.env.QSTASH_URL,
+  QSTASH_TOKEN: process.env.QSTASH_TOKEN,
+  QSTASH_CURRENT_SIGNING_KEY: process.env.QSTASH_CURRENT_SIGNING_KEY,
+  QSTASH_NEXT_SIGNING_KEY: process.env.QSTASH_NEXT_SIGNING_KEY,
   NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
 } as const;

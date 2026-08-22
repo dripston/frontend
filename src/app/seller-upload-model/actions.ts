@@ -8,8 +8,9 @@ import { type z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { model } from '@/lib/db/schema';
-import { logger } from '@/lib/logger';
 import { modelUploadSchema } from '@/zod-schema/upload-model-schema';
+import { qstashClient } from '@/lib/db/queue';
+import { env } from '@/env';
 
 function slug(value: string): string {
   return value
@@ -56,27 +57,40 @@ export async function uploadModelAction(
   }
 
   try {
-    await db.insert(model).values({
-      id,
-      userId: session.user.id,
-      name: parsed.data.basicInfo.name,
-      niche: parsed.data.basicInfo.declared_niche,
-      category: parsed.data.basicInfo.category,
-      task: parsed.data.basicInfo.task,
-      version: parsed.data.basicInfo.version,
-      endpointUrl: parsed.data.basicInfo.endpoint_url,
-      basicInfo: parsed.data.basicInfo,
-      files: parsed.data.files,
-      technical: parsed.data.technical,
-      training: parsed.data.training,
-      evaluation: parsed.data.evaluation,
-      usage: parsed.data.usage,
-      license: parsed.data.license,
-      pricing: parsed.data.pricing,
-      modelCard: parsed.data.modelCard,
+    await db.transaction(async (tx) => {
+      await tx.insert(model).values({
+        id,
+        userId: session.user.id,
+        name: parsed.data.basicInfo.name,
+        niche: parsed.data.basicInfo.declared_niche,
+        category: parsed.data.basicInfo.category,
+        task: parsed.data.basicInfo.task,
+        version: parsed.data.basicInfo.version,
+        endpointUrl: parsed.data.basicInfo.endpoint_url,
+        basicInfo: parsed.data.basicInfo,
+        files: parsed.data.files,
+        technical: parsed.data.technical,
+        training: parsed.data.training,
+        evaluation: parsed.data.evaluation,
+        usage: parsed.data.usage,
+        license: parsed.data.license,
+        pricing: parsed.data.pricing,
+        modelCard: parsed.data.modelCard,
+      });
+
+      await qstashClient.publishJSON({
+        url: `${env.NEXT_PUBLIC_APP_URL}/api/jobs/process-model`,
+        body: {
+          name: parsed.data.basicInfo.name,
+          model_id: id,
+          seller_id: session.user.id,
+          endpoint_url: parsed.data.basicInfo.endpoint_url,
+          declared_niche: parsed.data.basicInfo.declared_niche,
+        },
+      });
     });
   } catch (error) {
-    logger.error({ error, id }, 'Failed to insert model');
+    console.error(error);
     return { success: false, error: 'Failed to insert model into the database.' };
   }
 
