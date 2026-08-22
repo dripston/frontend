@@ -108,17 +108,9 @@ export function LoginForm() {
           </Label>
         </div>
 
-        <Button 
-          type="submit" 
-          size="lg" 
-          className="w-full relative group overflow-hidden mt-6" 
-          disabled={pending}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary to-indigo-600 opacity-100 transition-opacity group-hover:opacity-90" />
-          <span className="relative flex items-center justify-center gap-2 text-white font-medium">
-            {pending ? <Loader2Icon className="animate-spin size-4" /> : null}
-            Sign in
-          </span>
+        <Button type="submit" className="mt-4 w-full" disabled={pending}>
+          {pending ? <Loader2Icon className="mr-2 size-4 animate-spin" /> : null}
+          Sign in
         </Button>
 
         {formError ? (

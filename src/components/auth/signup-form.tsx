@@ -149,6 +149,7 @@ export function SignupForm() {
           size="lg"
           className="group relative mt-6 w-full overflow-hidden"
           disabled={pending}
+          isLoading={pending}
         >
           <span className="relative flex items-center justify-center gap-2 font-medium text-white">
             {pending ? <Loader2Icon className="size-4 animate-spin" /> : null}
