@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
 import { uploadModelAction } from '@/app/seller-upload-model/actions';
 import { modelUploadSchema } from '@/zod-schema/upload-model-schema';
 
@@ -408,12 +409,14 @@ export function ModelUploadForm() {
       const response = await uploadModelAction(parsed.data);
       if (response.success) {
         setSubmitted(true);
-        // Add success UI handling or redirect
+        toast.success('Model uploaded successfully!');
       } else {
+        toast.error(response.error || 'Failed to upload model');
         console.error(response.error, response.details);
         setSubmitted(false);
       }
     } catch (e) {
+      toast.error('An unexpected error occurred');
       console.error('Action failed:', e);
       setSubmitted(false);
     }
@@ -428,7 +431,11 @@ export function ModelUploadForm() {
           <p className="text-sm text-muted-foreground">
             Submit is enabled after you enter at least one field.
           </p>
-          <Button type="submit" disabled={isSubmitting || !isDirty}>
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            disabled={isSubmitting || !isDirty}
+          >
             Submit model
           </Button>
         </div>
@@ -1036,12 +1043,9 @@ export function ModelUploadForm() {
       </Card>
 
       <div className="rounded-xl border border-border bg-card p-4 lg:col-span-2">
-        <p className="text-sm text-muted-foreground">
-          Validate your submission before connecting API upload logic.
-        </p>
         {submitted ? (
-          <p className="mt-2 text-sm text-muted-foreground">
-            Form is valid. Connect this handler to your backend upload endpoint.
+          <p className="mt-2 text-sm font-medium text-green-600">
+            Model submitted successfully!
           </p>
         ) : null}
       </div>

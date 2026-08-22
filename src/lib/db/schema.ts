@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, pgTable, text, timestamp, uuid, jsonb } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -65,4 +65,29 @@ export const verification = pgTable('verification', {
     .notNull(),
 });
 
-export const schema = { user, session, account, verification };
+export const model = pgTable('model', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  niche: text('niche').notNull(),
+  category: text('category').notNull(),
+  basicInfo: jsonb('basic_info').notNull(),
+  files: jsonb('files').notNull(),
+  technical: jsonb('technical').notNull(),
+  training: jsonb('training').notNull(),
+  evaluation: jsonb('evaluation').notNull(),
+  usage: jsonb('usage').notNull(),
+  license: jsonb('license').notNull(),
+  pricing: jsonb('pricing').notNull(),
+  modelCard: jsonb('model_card').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true })
+    .$defaultFn(() => new Date())
+    .notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true })
+    .$defaultFn(() => new Date())
+    .notNull(),
+});
+
+export const schema = { user, session, account, verification, model };

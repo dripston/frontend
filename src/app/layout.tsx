@@ -64,7 +64,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="px-20">{children}</div>
           <AiFab />
           <Toaster />
         </ThemeProvider>
