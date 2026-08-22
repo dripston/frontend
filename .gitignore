@@ -31,10 +31,6 @@ yarn-error.log*
 next-env.d.ts
 
 /coverage
-/playwright-report
-/playwright/.cache
-/test-results
-/blob-report
 
 .idea
 *.swp

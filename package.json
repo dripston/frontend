@@ -23,11 +23,8 @@
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:install": "playwright install --with-deps chromium",
     "validate": "pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run test",
-    "clean": "rm -rf .next out coverage playwright-report test-results node_modules/.cache",
+    "clean": "rm -rf .next out coverage node_modules/.cache",
     "prepare": "husky"
   },
   "dependencies": {
@@ -50,7 +47,6 @@
   "devDependencies": {
     "@commitlint/cli": "21.2.2",
     "@commitlint/config-conventional": "21.2.2",
-    "@playwright/test": "1.62.1",
     "@tailwindcss/postcss": "4.3.3",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.2",

@@ -47,12 +47,12 @@ export function initials(value: string): string {
 }
 
 const AVATAR_GRADIENTS = [
-  ['#fe7f2d', '#b16838'],
-  ['#233d4d', '#3e6478'],
-  ['#fe7f2d', '#233d4d'],
-  ['#f7a571', '#fe7f2d'],
-  ['#3e6478', '#233d4d'],
-  ['#905e3d', '#fe7f2d'],
+  ['#2563eb', '#14185a'],
+  ['#3f5ec2', '#6a7ccd'],
+  ['#6a7ccd', '#14185a'],
+  ['#9ab0e5', '#3f5ec2'],
+  ['#2563eb', '#6a7ccd'],
+  ['#14185a', '#3f5ec2'],
 ] as const;
 
 export function avatarGradient(value: string): readonly [string, string] {

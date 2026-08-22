@@ -4,15 +4,7 @@ import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier';
 
 export default defineConfig([
-  globalIgnores([
-    '.next/**',
-    'out/**',
-    'build/**',
-    'coverage/**',
-    'playwright-report/**',
-    'test-results/**',
-    'next-env.d.ts',
-  ]),
+  globalIgnores(['.next/**', 'out/**', 'build/**', 'coverage/**', 'next-env.d.ts']),
 
   ...nextVitals,
   ...nextTs,
@@ -46,7 +38,6 @@ export default defineConfig([
       '**/*.config.{ts,mts,js,mjs}',
       '**/*.test.{ts,tsx}',
       '**/*.spec.{ts,tsx}',
-      'e2e/**/*.ts',
       'scripts/**/*.{js,mjs,ts,mts}',
     ],
     rules: {

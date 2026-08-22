@@ -38,8 +38,8 @@ export function ModelCard({ model }: { model: Model }) {
   return (
     <Card
       className={cn(
-        'group relative gap-0 px-4 py-3.5 hover:border-primary/40 hover:bg-accent/40',
-        'transition-colors focus-within:border-primary/60',
+        'group relative gap-0 rounded-xl p-4 shadow-2xs transition-all',
+        'focus-within:border-primary/60 hover:border-primary/40 hover:shadow-sm',
       )}
     >
       <div className="flex items-center gap-2.5">
@@ -127,11 +127,17 @@ export function ModelCard({ model }: { model: Model }) {
       </div>
 
       <div className="mt-2.5 flex items-center gap-2">
-        <Badge variant="secondary" className="font-mono text-[0.7rem] font-normal">
+        <Badge
+          variant="secondary"
+          className="rounded-md font-mono text-[11px] font-medium tracking-wide"
+        >
           {model.id}
         </Badge>
         {model.base ? (
-          <Badge variant="outline" className="text-[0.7rem] font-normal">
+          <Badge
+            variant="outline"
+            className="rounded-md font-mono text-[11px] font-medium tracking-wide"
+          >
             Base
           </Badge>
         ) : null}

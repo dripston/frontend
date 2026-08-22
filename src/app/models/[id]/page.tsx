@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ModelDetailSidebar } from '@/components/models/model-detail-sidebar';
+import { SiteHeader } from '@/components/site-header';
 import { ModelTabs } from '@/components/models/model-tabs';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -47,73 +48,79 @@ export default async function ModelPage({ params }: PageProps<'/models/[id]'>) {
   ];
 
   return (
-    <main className="mx-auto w-full max-w-6xl px-5 py-8">
-      <Link
-        href="/"
-        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-      >
-        ← Models
-      </Link>
+    <>
+      <SiteHeader />
+      <main className="mx-auto w-full max-w-5xl px-6 py-8">
+        <Link
+          href="/"
+          className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+        >
+          ← Models
+        </Link>
 
-      <header className="mt-4 space-y-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="grid size-7 shrink-0 place-items-center rounded-md text-[0.65rem] font-semibold text-white"
-            style={{ backgroundImage: `linear-gradient(140deg, ${from}, ${to})` }}
-          >
-            {initials(model.org)}
-          </span>
-          <h1 className="font-mono text-xl font-medium tracking-tight sm:text-2xl">
-            <span className="text-muted-foreground">{model.org}/</span>
-            {model.name}
-          </h1>
-          <Badge variant="secondary" className="font-mono text-[0.7rem] font-normal">
-            {model.id}
-          </Badge>
-          <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <HeartIcon className="size-3.5" />
-            {compactNumber(model.likes)}
-          </span>
-          <span className="text-sm text-muted-foreground">
-            {compactNumber(detail.followers)} followers
-          </span>
+        <header className="mt-4 space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <span
+              aria-hidden="true"
+              className="grid size-7 shrink-0 place-items-center rounded-md text-[0.65rem] font-semibold text-white"
+              style={{ backgroundImage: `linear-gradient(140deg, ${from}, ${to})` }}
+            >
+              {initials(model.org)}
+            </span>
+            <h1 className="font-mono text-xl font-medium tracking-tight sm:text-2xl">
+              <span className="text-muted-foreground">{model.org}/</span>
+              {model.name}
+            </h1>
+            <Badge
+              variant="secondary"
+              className="rounded-md font-mono text-[11px] font-medium tracking-wide"
+            >
+              {model.id}
+            </Badge>
+            <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              <HeartIcon className="size-3.5" />
+              {compactNumber(model.likes)}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              {compactNumber(detail.followers)} followers
+            </span>
 
-          <div className="ml-auto flex gap-2">
-            <Button variant="outline" size="sm">
-              <TerminalIcon />
-              Use this model
-            </Button>
-            <Button size="sm">
-              <RocketIcon />
-              Deploy
-            </Button>
+            <div className="ml-auto flex gap-2">
+              <Button variant="outline" size="sm">
+                <TerminalIcon />
+                Use this model
+              </Button>
+              <Button size="sm">
+                <RocketIcon />
+                Deploy
+              </Button>
+            </div>
           </div>
+
+          <ul className="flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <li key={tag}>
+                <Badge variant="outline" className="rounded-md font-normal">
+                  {tag}
+                </Badge>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-sm text-muted-foreground">
+            Updated{' '}
+            <time dateTime={model.updatedAt} suppressHydrationWarning>
+              {relativeTime(model.updatedAt)}
+            </time>{' '}
+            · {compactNumber(model.downloads)} downloads
+          </p>
+        </header>
+
+        <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
+          <ModelTabs detail={detail} />
+          <ModelDetailSidebar model={model} detail={detail} />
         </div>
-
-        <ul className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <li key={tag}>
-              <Badge variant="outline" className="font-normal">
-                {tag}
-              </Badge>
-            </li>
-          ))}
-        </ul>
-
-        <p className="text-sm text-muted-foreground">
-          Updated{' '}
-          <time dateTime={model.updatedAt} suppressHydrationWarning>
-            {relativeTime(model.updatedAt)}
-          </time>{' '}
-          · {compactNumber(model.downloads)} downloads
-        </p>
-      </header>
-
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
-        <ModelTabs detail={detail} />
-        <ModelDetailSidebar model={model} detail={detail} />
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

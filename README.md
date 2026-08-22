@@ -36,7 +36,6 @@ The app runs at http://localhost:3000.
 | `pnpm test`          | Unit tests once                                       |
 | `pnpm test:watch`    | Unit tests in watch mode                              |
 | `pnpm test:coverage` | Unit tests with coverage thresholds                   |
-| `pnpm test:e2e`      | Playwright against a real production build            |
 | `pnpm validate`      | format + lint + typecheck + test — run before pushing |
 
 ## Layout
@@ -59,7 +58,6 @@ src/
 │   └── utils.ts            `cn` and small shared helpers
 ├── env.ts                  Zod-validated environment variables
 ├── instrumentation.ts      Server startup hook + `onRequestError`
-e2e/                        Playwright specs
 ```
 
 ## What makes this production-grade
@@ -80,16 +78,13 @@ set in `next.config.ts` and asserted by an end-to-end test that also fails on an
 violation logged while the page loads. See SECURITY.md for why it uses `'unsafe-inline'`
 rather than a nonce, and how to switch.
 
-**Testing.** Vitest and Testing Library for units, Playwright for end-to-end. The e2e suite
-builds and runs the standalone server, so headers, caching and the CSP behave exactly as they
-will in production — two of the specs assert the security headers and that no two responses
-trip a CSP violation. The 70% coverage floor applies to the unit layer (`src/lib`,
-`src/components`); route files are excluded there because e2e covers them.
+**Testing.** Vitest and Testing Library, with a 70% coverage floor over the unit layer
+(`src/lib`, `src/components`). Route files and vendored `src/components/ui` are excluded from
+that measurement. There is no end-to-end suite in this repo.
 
 **Checks.** `pnpm run validate` runs format, lint, typecheck and unit tests in one pass, and
 the git hooks run the same checks before a commit or push. There is no CI workflow in this
-repo — wire one up to `pnpm run validate`, `pnpm run build` and `pnpm run test:e2e` when you
-want one. Dependabot config is still present and batches updates by ecosystem.
+repo — wire one up to `pnpm run validate` and `pnpm run build` when you want one. Dependabot config is still present and batches updates by ecosystem.
 
 **Container.** Multi-stage build on the standalone output, running as a non-root user with a
 `HEALTHCHECK` wired to `/api/health`.

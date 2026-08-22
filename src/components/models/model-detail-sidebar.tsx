@@ -1,5 +1,6 @@
 import { BoxIcon, ChartNoAxesColumnIcon, LayersIcon, ShapesIcon } from 'lucide-react';
 
+import { Kicker } from '@/components/kicker';
 import { Sparkline } from '@/components/models/sparkline';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -17,9 +18,9 @@ function Section({
 }) {
   return (
     <section className="space-y-3">
-      <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
-        <Icon className="size-4 text-muted-foreground" />
-        {title}
+      <h2 className="flex items-center gap-2">
+        <Icon className="size-3.5 text-muted-foreground" />
+        <Kicker>{title}</Kicker>
       </h2>
       {children}
     </section>
@@ -43,7 +44,7 @@ export function ModelDetailSidebar({
   return (
     <aside className="space-y-6">
       <section className="space-y-2">
-        <p className="text-sm text-muted-foreground">Downloads last month</p>
+        <Kicker>Downloads last month</Kicker>
         <div className="flex items-end justify-between gap-4">
           <p className="text-2xl font-semibold tabular-nums">
             {model.downloads.toLocaleString('en-US')}
@@ -99,7 +100,7 @@ export function ModelDetailSidebar({
             <li key={space}>
               <Badge
                 variant="secondary"
-                className="max-w-full truncate font-mono text-[0.7rem] font-normal"
+                className="max-w-full truncate rounded-md font-mono text-[11px] font-medium tracking-wide"
               >
                 {space}
               </Badge>
