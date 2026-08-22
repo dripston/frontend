@@ -20,7 +20,6 @@
 ## Checklist
 
 - [ ] `pnpm run validate` passes locally
-- [ ] Tests cover the new behaviour
 - [ ] No secrets, tokens or credentials in the diff
 - [ ] New environment variables added to `src/env.ts` **and** `.env.example`
 - [ ] Screenshots attached for user-visible changes

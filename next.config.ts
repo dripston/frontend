@@ -35,6 +35,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+
+  allowedDevOrigins: ['*.ngrok-free.app', '*.ngrok.io', '*.trycloudflare.com'],
   poweredByHeader: false,
   output: 'standalone',
   typedRoutes: true,

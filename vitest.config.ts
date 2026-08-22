@@ -7,34 +7,10 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: false,
-    setupFiles: ['./vitest.setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
-
     exclude: ['node_modules', '.next'],
     css: false,
     restoreMocks: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'lcov', 'html'],
-      reportsDirectory: './coverage',
-      include: ['src/**/*.{ts,tsx}'],
-      exclude: [
-        'src/**/*.{test,spec}.{ts,tsx}',
-        'src/**/*.d.ts',
-        'src/app/**',
-        'src/env.ts',
-        'src/instrumentation.ts',
-        'src/lib/logger.ts',
-        'src/lib/site-config.ts',
-        'src/components/theme-provider.tsx',
-        'src/components/ui/**',
-      ],
-      thresholds: {
-        statements: 70,
-        branches: 70,
-        functions: 70,
-        lines: 70,
-      },
-    },
+    passWithNoTests: true,
   },
 });

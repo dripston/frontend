@@ -50,7 +50,7 @@ export default async function ModelPage({ params }: PageProps<'/models/[id]'>) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl px-6 py-8">
+      <main className="w-full px-4 py-8">
         <Link
           href="/"
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"

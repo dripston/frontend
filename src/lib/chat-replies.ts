@@ -17,7 +17,7 @@ The app follows the App Router conventions with a thin, testable core.
 - \`src/lib\` — pure logic: formatters, data and helpers
 - \`src/env.ts\` — Zod-validated environment
 
-Everything in \`src/lib\` and \`src/components\` is covered by unit tests.`,
+Pure logic lives in \`src/lib\`, so routes and components stay thin.`,
   },
   {
     match: /model ?card|card component/i,
@@ -55,7 +55,7 @@ pnpm dlx shadcn@latest add dialog
 The components are **yours** once generated — edit them directly. This project is built on Base UI, so composition uses a \`render\` prop:
 
 \`\`\`tsx
-<Button render={<Link href="/chat" />}>Open chat</Button>
+<Button nativeButton={false} render={<Link href="/chat" />}>Open chat</Button>
 \`\`\``,
   },
 ];

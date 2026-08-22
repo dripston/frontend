@@ -2,17 +2,17 @@
 
 import { Loader2Icon } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useId, useState } from 'react';
 
 import { Field } from '@/components/auth/field';
 import { PasswordField } from '@/components/auth/password-field';
 import { PasswordMeter } from '@/components/auth/password-meter';
-import { SocialButtons } from '@/components/auth/social-buttons';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { signUp } from '@/lib/auth-client';
 import { collectErrors, signupSchema, type FieldErrors } from '@/lib/auth-schema';
 
 export function SignupForm() {
@@ -29,9 +29,11 @@ export function SignupForm() {
   const [terms, setTerms] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [pending, setPending] = useState(false);
-  const [done, setDone] = useState(false);
+  const [formError, setFormError] = useState('');
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  const router = useRouter();
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const parsed = signupSchema.safeParse({ name, email, password, confirm, terms });
@@ -41,21 +43,28 @@ export function SignupForm() {
     }
 
     setErrors({});
+    setFormError('');
     setPending(true);
-    setDone(true);
+
+    const { error } = await signUp.email({
+      name: parsed.data.name,
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+
     setPending(false);
+
+    if (error) {
+      setFormError(error.message ?? 'Could not create the account. Try again.');
+      return;
+    }
+
+    router.push('/');
+    router.refresh();
   }
 
   return (
-    <div className="space-y-6">
-      <SocialButtons />
-
-      <div className="flex items-center gap-3">
-        <Separator className="flex-1" />
-        <span className="text-xs text-muted-foreground">or</span>
-        <Separator className="flex-1" />
-      </div>
-
+    <div>
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <Field id={nameId} label="Full name" error={errors.name}>
           <Input
@@ -140,9 +149,12 @@ export function SignupForm() {
           Create account
         </Button>
 
-        {done ? (
-          <p role="status" className="text-center text-xs text-muted-foreground">
-            Validated. Connect an auth provider to create the account.
+        {formError ? (
+          <p
+            role="alert"
+            className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-center text-xs text-destructive"
+          >
+            {formError}
           </p>
         ) : null}
       </form>

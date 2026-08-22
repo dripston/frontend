@@ -116,7 +116,7 @@ export function ModelExplorer({ models }: { models: Model[] }) {
           No models match these filters.
         </div>
       ) : (
-        <ul className="grid gap-3 lg:grid-cols-2">
+        <ul className="grid gap-3 lg:grid-cols-2 2xl:grid-cols-3">
           {visible.map((model) => (
             <li key={model.id}>
               <ModelCard model={model} />

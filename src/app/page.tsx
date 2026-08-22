@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <TooltipProvider>
       <SiteHeader />
-      <main className="mx-auto w-full max-w-5xl px-6 py-10">
+      <main className="w-full px-4 py-8">
         <ModelExplorer models={models} />
       </main>
     </TooltipProvider>

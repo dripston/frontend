@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 export default function LoginPage() {
   return (
     <AuthShell
+      kicker="Sign in"
       title="Welcome back"
       subtitle="Sign in to pick up where you left off."
       footer={
